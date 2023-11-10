@@ -6,6 +6,7 @@
 #include "jDE.h"
 #include "X.h"
 
+// Atoms are placed in 3D space on [XjL = -6,  XjU=6]
 const int XjL = -6, XjU = 6;
 const double epsilon = 1e-6;  // 1 * 10^(-6)
 
@@ -32,7 +33,7 @@ double calculateDistance(double x1, double y1, double z1, double x2, double y2, 
     return dx * dx + dy * dy + dz * dz;
 }
 
-// Fitness = sum of (distance^-12 - distance^-6) for all pairs of atoms
+// Fitness = 4 * sum of (distance^(-12) - distance^(-6)) for all pairs of atoms
 double calculateFitness(std::vector<double> coords) {
     fixZeroes(coords);
     double fitness = 0;
@@ -58,7 +59,41 @@ double calculateFitness(std::vector<double> coords) {
     return 4 * fitness;
 }
 
-// Returns random double between XjL and xjU
+// Returns true if the algorithm has reached any of the set limits
+bool isLimitReached(
+    std::chrono::time_point<std::chrono::steady_clock>& start,
+    unsigned int nfes, unsigned int nfesLimit, double runtimeLmt
+) {
+    // Nfes limit check
+    if (nfes >= nfesLimit) {
+        std::cout << "Nfes limit reached.\n";
+        return true;
+    }
+
+    // Runtime limit check, duration in seconds
+    auto end = std::chrono::steady_clock::now();
+    auto elapsed = std::chrono::duration_cast<std::chrono::seconds>(end - start).count();
+    if (runtimeLmt != -1 && elapsed >= runtimeLmt) {
+        std::cout << "Time limit exceeded.\n";
+        return true;
+    }
+    return false;
+}
+
+// Checks if current fitness is better than best, updates accordingly
+void updateBest(
+    std::vector<X>& population, double& currentFitness, 
+    double& bestFitness, X& best, int i
+) 
+{
+    if (currentFitness < bestFitness) {
+        best = population[i];
+        bestFitness = currentFitness;
+        std::cout << bestFitness << "\n";
+    }
+}
+
+// Returns random double between 0 and 1
 double getRandomDouble(std::mt19937& generator) {
     std::uniform_real_distribution<double> distribution(0.0, 1.0);
     return distribution(generator);

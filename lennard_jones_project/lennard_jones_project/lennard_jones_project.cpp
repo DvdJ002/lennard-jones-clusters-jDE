@@ -9,10 +9,12 @@
 #include "X.h"
 
 
+// -N -seed -target [-nfesLmt | -runtimeLmt] -Np
 int main(int argc, char* argv[])
 {
     if (argc < 9) {
-        return 1; // Return error code
+        std::cout << "Incorrect quantity of input parameters!\n";
+        return 1;
     }
 
     // Parse command-line arguments
@@ -35,7 +37,7 @@ int main(int argc, char* argv[])
     }
     catch (const std::exception& e) {
         std::cerr << "Error parsing arguments: " << e.what() << std::endl;
-        return 1; // Return error code
+        return 1;
     }
 
     // Algorithm setup
@@ -43,7 +45,7 @@ int main(int argc, char* argv[])
     std::vector<X> population;
     unsigned int nfes = 0;
 
-    // Initialize a population and insert random doubles in atoms of each X
+    // Initialize a population and insert random doubles in each X
     for (int i = 0; i < Np; ++i) {
         population.emplace_back(N);
     }
@@ -53,25 +55,22 @@ int main(int argc, char* argv[])
         }
     }
 
-
     // First best X, to be replaced with a better X
     X best(N);
     for (double& coord : best.coords) {
         coord = getRandomDouble(generator) * (XjU - XjL) + XjL;
     }
 
-    // Starts the jDE algorithm
+    // Start execution of jDE algorithm
     auto runtime =
         startAlgorithm(best, population, N, Np, nfes, nfesLmt, runtimeLmt, generator, target);
 
-
-
-    // Output various algorithm results
+    // Output various algorithm results to console
     std::cout << "N: " << N << "\n";
     std::cout << "seed: " << seed << "\n";
     std::cout << "nfes: " << nfes << "\n";
     std::cout << "runtime (s): " << runtime << "\n";
-    std::cout << "speed: " << (nfes / runtime) << "\n";
+    std::cout << "speed (evals/s): " << (nfes / runtime) << "\n";
     // Round fitness of best result to 6 places
     std::cout << "E: " << std::fixed <<
         std::setprecision(6) << calculateFitness(best.coords) << "\n";
