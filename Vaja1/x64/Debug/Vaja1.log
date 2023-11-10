@@ -1,4 +1,0 @@
-﻿  Vaja1.cpp
-D:\S6\Paralelno_racunanje\Vaja1\Vaja1\Vaja1.cpp(110,69): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
-D:\S6\Paralelno_racunanje\Vaja1\Vaja1\Vaja1.cpp(238,23): warning C4018: '<': signed/unsigned mismatch
-  Vaja1.vcxproj -> D:\S6\Paralelno_racunanje\Vaja1\x64\Debug\Vaja1.exe
