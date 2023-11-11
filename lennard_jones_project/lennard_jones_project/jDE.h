@@ -66,8 +66,9 @@ double select(std::vector<X>& population, std::vector<double>& U, int i, double 
     if (fitnessU < fitnessX) {
         population[i].coords = U;
         return fitnessU;
+    } else {
+        population[i].F = oldF; population[i].Cr = oldCr;
     }
-    population[i].F = oldF; population[i].Cr = oldCr;
     return fitnessX;
 }
 
