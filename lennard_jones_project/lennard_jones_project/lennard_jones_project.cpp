@@ -4,12 +4,13 @@
 #include <chrono>
 #include <iomanip>
 #include <string>
+#include <mutex>
 #include "jDE.h"
 #include "utils.h"
 #include "X.h"
 
 
-// -N -seed -target [-nfesLmt | -runtimeLmt] -Np
+// -N -seed -target [-nfesLmt | -runtimeLmt] -Np -expRuns -expThreads
 int main(int argc, char* argv[])
 {
     if (argc < 9) {
@@ -17,12 +18,13 @@ int main(int argc, char* argv[])
         return 1;
     }
 
+
     // Parse command-line arguments
-    unsigned int N, seed, nfesLmt, runtimeLmt, Np;
+    unsigned int N, nfesLmt, runtimeLmt, Np, expThreads;
     double target;
     try {
         N = std::stoi(argv[2]);
-        seed = std::stoi(argv[4]);
+        seedGl = std::stoi(argv[4]);
         target = std::stod(argv[6]);
         // Could be either nfesLmt or runtimeLmt
         if (std::string(argv[7]) == "-nfesLmt") {
@@ -34,47 +36,31 @@ int main(int argc, char* argv[])
             runtimeLmt = std::stoi(argv[8]);
         }
         Np = std::stoi(argv[10]);
+        expRuns = std::stoi(argv[12]);
+        expThreads = std::stoi(argv[14]);
     }
     catch (const std::exception& e) {
         std::cerr << "Error parsing arguments: " << e.what() << std::endl;
         return 1;
     }
 
-    // Algorithm setup
-    std::mt19937 generator(seed);
-    std::vector<X> population;
-    unsigned int nfes = 0;
-
-    // Initialize a population and insert random doubles in each X
-    for (int i = 0; i < Np; ++i) {
-        population.emplace_back(N);
-    }
-    for (auto& item : population) {
-        for (int i = 0; i < item.coords.size(); i++) {
-            item.coords[i] = getRandomDouble(generator) * (XjU - XjL) + XjL;
-        }
+    // Run expRuns amount of runs parallel across expThreads amount of threads
+    std::vector <std::thread*> threadVec;
+    auto start = std::chrono::steady_clock::now();
+    for (unsigned int i = 0; i < expThreads; i++) {
+        std::thread* nit = new std::thread(startRuns, N, Np, nfesLmt, runtimeLmt, target);
+        threadVec.push_back(nit);
     }
 
-    // First best X, to be replaced with a better X
-    X best(N);
-    for (double& coord : best.coords) {
-        coord = getRandomDouble(generator) * (XjU - XjL) + XjL;
+    // Wait for the thread to finish and delete it 
+    // Should replace with smart pointers
+    for (auto i : threadVec) {
+        i->join();
+        delete i;
     }
 
-    // Start execution of jDE algorithm
-    auto runtime =
-        startAlgorithm(best, population, N, Np, nfes, nfesLmt, runtimeLmt, generator, target);
-
-    // Output various algorithm results to console
-    std::cout << "N: " << N << "\n";
-    std::cout << "seed: " << seed << "\n";
-    std::cout << "nfes: " << nfes << "\n";
-    std::cout << "runtime (s): " << runtime << "\n";
-    std::cout << "speed (evals/s): " << (nfes / runtime) << "\n";
-    // Round fitness of best result to 6 places
-    std::cout << "E: " << std::fixed <<
-        std::setprecision(6) << calculateFitness(best.coords) << "\n";
-    // Print coordinates of best solution
-    fixZeroes(best.coords);
-    std::cout << "solution: "; printCoords(best);
+    // Measure and output the entire runtime for expRuns solutions
+    auto end = std::chrono::steady_clock::now();
+    auto duration = std::chrono::duration_cast<std::chrono::duration<double>>(end - start).count();
+    std::cout << "Entire duration: " << duration << "\n";
 }

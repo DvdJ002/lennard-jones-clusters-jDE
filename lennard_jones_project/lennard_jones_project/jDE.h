@@ -59,9 +59,9 @@ void repair(std::vector<double>& U) {
 
 // The next generation solution(Xi, G + 1) is adjusted based on the fitness comparison results
 // Function returns the best fitness between XiG and U
-double select(std::vector<X>& population, std::vector<double>& U, int i, double oldF, double oldCr) {
-    double fitnessU = calculateFitness(U);
-    double fitnessX = calculateFitness(population[i].coords);
+double select(std::vector<X>& population, std::vector<double>& U, int i, double oldF, double oldCr, unsigned int N) {
+    double fitnessU = calculateFitness(U, N);
+    double fitnessX = calculateFitness(population[i].coords, N);
 
     if (fitnessU < fitnessX) {
         population[i].coords = U;
@@ -77,10 +77,21 @@ double select(std::vector<X>& population, std::vector<double>& U, int i, double 
 // 1. runtime limit or nfes limit has been reached
 // 2. the current best solution is optimal (with an error margin of 1 * 10^(-6))
 auto startAlgorithm(
-    X& best, std::vector<X>& population, unsigned int N,
-    unsigned int Np, unsigned int& nfes, unsigned int nfesLimit, double runtimeLimit,
-    std::mt19937& generator, double target)
+    unsigned int N, unsigned int Np, unsigned int nfesLimit, 
+    double runtimeLimit, double target, int seed)
 {
+    // Algorithm setup
+    unsigned int nfes = 0;
+    std::mt19937 generator(seed);
+    std::vector<X> population;
+    initializePopulation(population, generator, N, Np);
+
+    // First best X, to be replaced with a better X
+    X best(N);
+    for (double& coord : best.coords) {
+        coord = getRandomDouble(generator) * (XjU - XjL) + XjL;
+    }
+
     // Initialize needed variables and start runtime
     std::vector<double> V(3 * N, 0.0), U(3 * N, 0.0);
     auto start = std::chrono::steady_clock::now();
@@ -96,7 +107,7 @@ auto startAlgorithm(
             mutate(population, V, i, Np, generator);
             crossover(population, V, U, i, Np, generator);
             repair(U);
-            currentFitness = round(select(population, U, i, oldF, oldCr) * 1e6) / 1e6;
+            currentFitness = round(select(population, U, i, oldF, oldCr, N) * 1e6) / 1e6;
             nfes++;
 
             // Update best value
@@ -109,7 +120,26 @@ auto startAlgorithm(
     auto end = std::chrono::steady_clock::now();
     auto duration = std::chrono::duration_cast<std::chrono::duration<double>>(end - start).count();
 
+    // Prints results that can be used for analysis
+    printResults(N, seed, nfes, duration, best);
+
     return duration;
+}
+
+// This function is called by a every thread and runs the algorithm 
+// until seed reaches expRuns, ie. the amount of desired runs is met
+auto startRuns(
+    unsigned int N, unsigned int Np, unsigned int nfesLimit,
+    double runtimeLimit, double target) {
+    while (true) {
+        // getSeed() will always return a unique seed from (0, expRuns)
+        int mySeed = getSeed();
+        if (mySeed == -1) { 
+            std::cout << "Thread ended" << ", Thread ID: " << std::this_thread::get_id() << "\n";
+            break; 
+        }
+        startAlgorithm(N, Np, nfesLimit, runtimeLimit, target, mySeed);
+    }
 }
 
 #endif //VAJA_2_JDE_H
