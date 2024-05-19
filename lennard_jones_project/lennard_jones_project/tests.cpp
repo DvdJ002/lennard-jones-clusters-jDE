@@ -4,6 +4,8 @@
 #include <chrono>
 
 #include "utils.h"
+#include "X.h"
+#include "jDE.h"
 
 // Test getRandomDouble to ensure it generates values between 0 and 1
 void test_getRandomDouble() {
