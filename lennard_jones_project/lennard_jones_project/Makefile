@@ -15,13 +15,13 @@ EXEC = my_program
 all: $(EXEC)
 
 $(EXEC): $(OBJS)
-    $(CC) $(CFLAGS) $(OBJS) -o $(EXEC) $(LDFLAGS)
+	$(CC) $(CFLAGS) $(OBJS) -o $(EXEC) $(LDFLAGS)
 
 $(OBJS): $(SRCS)
-    $(CC) $(CFLAGS) -c $^
+	$(CC) $(CFLAGS) -c $^
 
 tests: $(TESTS)
-    $(CC) $(CFLAGS) $(TESTS) $(SRCS) -o test/test_suite $(LDFLAGS)
+	$(CC) $(CFLAGS) $(TESTS) $(SRCS) -o test/test_suite $(LDFLAGS)
 
 clean:
-    rm -f $(SRCDIR)/*.o $(EXEC) test/test_suite
+	rm -f $(SRCDIR)/*.o $(EXEC) test/test_suite
