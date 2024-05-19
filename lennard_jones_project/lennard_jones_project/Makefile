@@ -3,7 +3,7 @@ CFLAGS = -Wall -std=c++11
 LDFLAGS =
 
 SRCDIR = .
-TESTDIR = test
+TESTDIR = .
 
 SRCS = $(wildcard $(SRCDIR)/*.cpp)
 OBJS = $(SRCS:.cpp=.o)
