@@ -1,0 +1,229 @@
+#include "mainwindow.h"
+#include "ui_mainwindow.h"
+#include "jdeworker.h"
+
+#include <QThread>
+#include <cctype>
+#include <climits>
+#include <QMessageBox>
+#include <QFileDialog>
+
+MainWindow::MainWindow(QWidget *parent)
+    : QMainWindow(parent), ui(new Ui::MainWindow), exportManager(new ExportManager())
+{
+    ui->setupUi(this);
+
+    // Disables resizing
+    this->setFixedSize(this->size());
+    this->setWindowFlags(Qt::Window | Qt::MSWindowsFixedSizeDialogHint);
+    setup_ui_elements();
+}
+
+
+void MainWindow::setup_ui_elements(){
+    this->stackedWidget = ui->stackedWidget;
+    stackedWidget->setCurrentIndex(0);
+
+    ui->label_livedata->setStyleSheet("border: 1px solid black;");
+    ui->label_end_results->setStyleSheet("border: 1px solid black;");
+
+    // Menu actions
+    connect(ui->actionExit, &QAction::triggered, this, &MainWindow::quit_app);
+    connect(ui->actionImport_jDE_arguments, &QAction::triggered, this, &MainWindow::action_import_jde_arguments);
+    connect(ui->actionExport_jDE_arguments, &QAction::triggered, this, &MainWindow::action_export_jde_arguments);
+    connect(ui->actionAutomatic_jDE_export, &QAction::triggered, this, &MainWindow::action_jde_automatic_export);
+
+
+    // Input data form styling
+    QFont font;
+    font.setPointSize(12);
+    font.setBold(false);
+    font.setItalic(false);
+    font.setWeight(QFont::DemiBold);
+    ui->edit_N->setFont(font);
+    ui->edit_seed->setFont(font);
+    ui->edit_target->setFont(font);
+    ui->edit_target->setText("-28.422532");
+    ui->edit_runtimelmt->setFont(font);
+    ui->edit_np->setFont(font);
+}
+
+/* ---------------------BUTTON SLOTS--------------------- */
+
+void MainWindow::on_button_mainscreen_clicked() { stackedWidget->setCurrentIndex(0); }
+void MainWindow::on_button_screen2_clicked() { stackedWidget->setCurrentIndex(1); }
+void MainWindow::on_button_info_clicked() { stackedWidget->setCurrentIndex(2); }
+
+void MainWindow::on_button_start_clicked() {
+    // DO NOT START ANOTHER THREAD IF PREV INSTANCE IS RUNNING
+    if (jdeWorker || jdeWorkerThread) {
+        //prompt_warning_message("Unallowed action", "Cannot start another instance while algorithm is running");
+        jdeWorker->terminateExecution();
+        ui->button_start->setText("Start");
+        jdeWorker = NULL; jdeWorkerThread = NULL;
+        return;
+    }
+
+    if (!is_input_valid()){
+        prompt_warning_message("Invalid arguments!", "The arguments contain blank fields or non-number characters");
+        return;
+    }
+
+    // Create a jde worker object and move it to a separate thread
+    jdeWorker = new JDEWorker();
+    jdeWorkerThread = new QThread();
+    jdeWorker->moveToThread(jdeWorkerThread);
+
+    connect(jdeWorkerThread, &QThread::started, jdeWorker, &JDEWorker::initializeAlgorithm);
+    // Signal to update new best fitness in UI
+    connect(jdeWorker, &JDEWorker::fitnessUpdated, this, &MainWindow::update_best_fitness);
+    connect(jdeWorker, &JDEWorker::sendAlgorithmResults, this, &MainWindow::display_algo_results);
+
+    // Quit and clean up thread and worker when task is finished
+    connect(jdeWorker, &JDEWorker::taskFinished, jdeWorkerThread, &QThread::quit);
+    connect(jdeWorkerThread, &QThread::finished, jdeWorker, &QObject::deleteLater);
+    connect(jdeWorkerThread, &QThread::finished, jdeWorkerThread, &QObject::deleteLater);
+
+    start_worker();
+}
+
+/* ---------------------MENU ACTION SLOTS--------------------- */
+
+void MainWindow::quit_app(){
+    qApp->exit();
+}
+
+void MainWindow::action_import_jde_arguments(){
+        QString filePath = QFileDialog::getOpenFileName(this, tr("Import arguments"), "", tr("JSON Files (*.json)"));
+        QJsonObject arguments = exportManager->importJdeArguments(filePath);
+        if (filePath.isEmpty() || arguments.isEmpty()) {
+            prompt_warning_message("Import Error", "Failed to import jDE arguments");
+            return;
+        }
+
+        QJsonValue nValue = arguments.value("N");
+        QJsonValue npValue = arguments.value("Np");
+        QJsonValue nfesLmtValue = arguments.value("nfesLmt");
+        QJsonValue optimizeZeroesValue = arguments.value("optimizeZeroes");
+        QJsonValue runtimeLmtValue = arguments.value("runtimeLmt");
+        QJsonValue seedValue = arguments.value("seed");
+        QJsonValue targetValue = arguments.value("target");
+
+        if (optimizeZeroesValue.isUndefined() || runtimeLmtValue.isUndefined() || seedValue.isUndefined() ||
+            nValue.isUndefined() || npValue.isUndefined() || nfesLmtValue.isUndefined() || targetValue.isUndefined())
+        {
+            prompt_warning_message("Import Error", "Failed to find JSON values");
+            return;
+        }
+
+        ui->edit_N->setText(QString::number(nValue.toInteger()));
+        ui->edit_np->setText(QString::number(npValue.toInteger()));
+        ui->edit_runtimelmt->setText(QString::number(runtimeLmtValue.toInteger()));
+        ui->edit_seed->setText(QString::number(seedValue.toInteger()));
+        ui->edit_target->setText(QString::number(targetValue.toDouble()));
+        optimizeZeroesValue.toBool() ?
+            ui->checkBox_opt->setCheckState(Qt::Checked) : ui->checkBox_opt->setCheckState(Qt::Unchecked);
+}
+
+void MainWindow::action_export_jde_arguments(){
+    QString filePath = QFileDialog::getSaveFileName(this, tr("Export arguments"), "", tr("JSON Files (*.json)"));
+    if (filePath.isEmpty())
+        return;
+    QJsonObject arguments = exportManager->getJSONFromArguments(
+        ui->edit_N->toPlainText().toInt(), ui->edit_seed->toPlainText().toInt(), -1,
+        ui->edit_runtimelmt->toPlainText().toInt(), ui->edit_np->toPlainText().toInt(),
+        ui->edit_target->toPlainText().toDouble(), (ui->checkBox_opt->checkState() == Qt::Checked)
+    );
+
+    QFileInfo fileInfo(filePath);
+    if (!exportManager->exportJdeArguments(filePath, arguments)){
+        prompt_warning_message("Export Error", "Failed to export jDE arguments to" + fileInfo.fileName().toStdString());
+    } else {
+        prompt_info_message("jDE arguments exported to " + fileInfo.fileName().toStdString());
+    }
+}
+
+void MainWindow::action_jde_automatic_export(){
+    prompt_warning_message("action_jde_automatic_export", "");
+}
+
+
+/* ---------------------jDE ALGORITHM--------------------- */
+
+void MainWindow::start_worker(){
+    ui->label_livedata->setText("");
+    ui->button_start->setText("Stop");
+    jdeWorker->setArguments(
+        ui->edit_N->toPlainText().toInt(), ui->edit_seed->toPlainText().toInt(), -1,
+        ui->edit_runtimelmt->toPlainText().toInt(), ui->edit_np->toPlainText().toInt(),
+        ui->edit_target->toPlainText().toDouble(), ui->checkBox_opt
+        );
+    jdeWorkerThread->start();
+}
+
+void MainWindow::update_best_fitness(double bestFitness){
+    ui->label_livedata->setText(
+        QString::number(bestFitness) + "\n" + ui->label_livedata->text()
+    );
+}
+
+// This function is called when the jde thread is finished
+void MainWindow::display_algo_results(std::string results){
+    ui->label_end_results->setText("");
+    ui->label_end_results->setText(QString::fromStdString(results));
+    ui->button_start->setText("Start");
+    jdeWorker = NULL; jdeWorkerThread = NULL;
+}
+
+bool MainWindow::is_input_valid() {
+    // Get all fields to validate
+    QString N = ui->edit_N->toPlainText();
+    QString seed = ui->edit_seed->toPlainText();
+    QString runtimeLmt = ui->edit_runtimelmt->toPlainText();
+    QString np = ui->edit_np->toPlainText();
+    QString target = ui->edit_target->toPlainText();
+
+    if (N.isEmpty() || seed.isEmpty() || runtimeLmt.isEmpty() || np.isEmpty() || target.isEmpty()) {
+        return false;
+    }
+
+    // Ensure all fields are valid numbers
+    bool validN, validSeed, validRuntimeLmt, validNp, validTarget;
+
+    N.toInt(&validN);
+    seed.toInt(&validSeed);
+    runtimeLmt.toInt(&validRuntimeLmt);
+    np.toInt(&validNp);
+    target.toDouble(&validTarget);
+
+    if (!validN || !validSeed || !validRuntimeLmt || !validNp || !validTarget) {
+        return false;
+    }
+    return true;
+}
+
+void MainWindow::prompt_warning_message(std::string warningText, std::string infoText){
+    QMessageBox msgBox;
+    msgBox.setInformativeText(QString::fromStdString(infoText));
+    msgBox.setText(QString::fromStdString(warningText));
+    msgBox.setIcon(QMessageBox::Warning);
+    msgBox.exec();
+}
+
+void MainWindow::prompt_info_message(std::string infoText){
+    QMessageBox msgBox;
+    msgBox.setText(QString::fromStdString(infoText));
+    msgBox.setIcon(QMessageBox::Information);
+    msgBox.exec();
+}
+
+
+MainWindow::~MainWindow()
+{
+    delete ui;
+    delete stackedWidget;
+    delete jdeWorker;
+    delete jdeWorkerThread;
+}
+
+
