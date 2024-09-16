@@ -79,7 +79,7 @@
      <bool>false</bool>
     </property>
     <property name="currentIndex">
-     <number>0</number>
+     <number>2</number>
     </property>
     <widget class="QWidget" name="page">
      <widget class="QWidget" name="gridLayoutWidget">
@@ -88,7 +88,7 @@
         <x>10</x>
         <y>50</y>
         <width>411</width>
-        <height>221</height>
+        <height>211</height>
        </rect>
       </property>
       <layout class="QGridLayout" name="input_grid" rowstretch="0,0,0,0,0,0,0" columnstretch="1,4">
@@ -417,6 +417,9 @@
            <pointsize>12</pointsize>
           </font>
          </property>
+         <property name="styleSheet">
+          <string notr="true">background-color: #cccccc; color: black;</string>
+         </property>
          <property name="text">
           <string>This is a multi-threaded implementation of the jDE algorithm for solving the Lennard-Jones Clusters problem in C++. It optimizes the placement of atoms in 3D space to minimize the total energy of the system in a parallel fashion.</string>
          </property>
@@ -431,6 +434,9 @@
           <font>
            <pointsize>12</pointsize>
           </font>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">background-color: #cccccc; color: black;</string>
          </property>
          <property name="text">
           <string>The application provides a way to input the algorithm configuration and displays the optimal energy of each algorithm iteration in a graph and numerically. 
@@ -447,6 +453,9 @@
           <font>
            <pointsize>14</pointsize>
           </font>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">background-color: #cccccc; color: black;</string>
          </property>
          <property name="text">
           <string>Made by DvdJ002
@@ -475,7 +484,7 @@ Made with QT (C++)</string>
     <bool>false</bool>
    </property>
    <property name="styleSheet">
-    <string notr="true">background-color: #cccccc; color: black;</string>
+    <string notr="true"/>
    </property>
    <widget class="QMenu" name="menujDE">
     <property name="geometry">

@@ -27,7 +27,9 @@ void MainWindow::setup_ui_elements(){
     ui->label_livedata->setStyleSheet("border: 1px solid black;");
     ui->label_end_results->setStyleSheet("border: 1px solid black;");
 
-    // Menu actions
+    // Menu and actions
+    QString style = "QMenuBar::item:selected { background: white; } QMenuBar::item:pressed {  background: white; }";
+    ui->menuBar->setStyleSheet(style);
     connect(ui->actionExit, &QAction::triggered, this, &MainWindow::quit_app);
     connect(ui->actionImport_jDE_arguments, &QAction::triggered, this, &MainWindow::action_import_jde_arguments);
     connect(ui->actionExport_jDE_arguments, &QAction::triggered, this, &MainWindow::action_export_jde_arguments);
