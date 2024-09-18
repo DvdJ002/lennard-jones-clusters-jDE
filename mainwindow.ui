@@ -79,7 +79,7 @@
      <bool>false</bool>
     </property>
     <property name="currentIndex">
-     <number>2</number>
+     <number>0</number>
     </property>
     <widget class="QWidget" name="page">
      <widget class="QWidget" name="gridLayoutWidget">
@@ -274,7 +274,7 @@
        <rect>
         <x>436</x>
         <y>0</y>
-        <width>3</width>
+        <width>2</width>
         <height>650</height>
        </rect>
       </property>

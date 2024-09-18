@@ -5,6 +5,7 @@
 #include "ui_mainwindow.h"
 #include "jdeworker.h"
 #include "exportmanager.h"
+#include "settingsmanager.h"
 
 
 QT_BEGIN_NAMESPACE
@@ -40,6 +41,8 @@ private:
     QStackedWidget *stackedWidget;
     ExportManager *exportManager;
     JDEWorker *jdeWorker = NULL; QThread* jdeWorkerThread = NULL;
+    SettingsManager *settingsManager;
+
 
     void setup_ui_elements();
     void initialize_jde_worker();

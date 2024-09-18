@@ -12,13 +12,16 @@ SOURCES += \
     exportmanager.cpp \
     jdeworker.cpp \
     main.cpp \
-    mainwindow.cpp
+    mainwindow.cpp \
+    settingsmanager.cpp
 
 HEADERS += \
+    autoexportdialog.h \
     exportmanager.h \
     jde.h \
     jdeworker.h \
     mainwindow.h \
+    settingsmanager.h \
     utils.h \
     x.h
 

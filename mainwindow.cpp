@@ -1,5 +1,6 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include "autoexportdialog.h"
 #include "jdeworker.h"
 
 #include <QThread>
@@ -7,9 +8,11 @@
 #include <climits>
 #include <QMessageBox>
 #include <QFileDialog>
+#include <QDialog>
 
 MainWindow::MainWindow(QWidget *parent)
-    : QMainWindow(parent), ui(new Ui::MainWindow), exportManager(new ExportManager())
+    : QMainWindow(parent), ui(new Ui::MainWindow), exportManager(new ExportManager()),
+    settingsManager(new SettingsManager)
 {
     ui->setupUi(this);
 
@@ -146,7 +149,10 @@ void MainWindow::action_export_jde_arguments(){
 }
 
 void MainWindow::action_jde_automatic_export(){
-    prompt_warning_message("action_jde_automatic_export", "");
+    AutoExportDialog dialog(this, settingsManager);
+    if (dialog.exec() == QDialog::Accepted){
+        prompt_info_message("Automatic export preferences saved");
+    }
 }
 
 
