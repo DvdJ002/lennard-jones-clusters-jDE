@@ -24,7 +24,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>1</string>
+     <string>jDE Algorithm</string>
     </property>
    </widget>
    <widget class="QPushButton" name="button_screen2">
@@ -50,7 +50,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>3</string>
+     <string>About</string>
     </property>
    </widget>
    <widget class="QLabel" name="test_label">
@@ -79,7 +79,7 @@
      <bool>false</bool>
     </property>
     <property name="currentIndex">
-     <number>0</number>
+     <number>2</number>
     </property>
     <widget class="QWidget" name="page">
      <widget class="QWidget" name="gridLayoutWidget">
@@ -418,7 +418,7 @@
           </font>
          </property>
          <property name="styleSheet">
-          <string notr="true">background-color: #cccccc; color: black;</string>
+          <string notr="true">color: black;</string>
          </property>
          <property name="text">
           <string>This is a multi-threaded implementation of the jDE algorithm for solving the Lennard-Jones Clusters problem in C++. It optimizes the placement of atoms in 3D space to minimize the total energy of the system in a parallel fashion.</string>
@@ -436,7 +436,7 @@
           </font>
          </property>
          <property name="styleSheet">
-          <string notr="true">background-color: #cccccc; color: black;</string>
+          <string notr="true">color: black;</string>
          </property>
          <property name="text">
           <string>The application provides a way to input the algorithm configuration and displays the optimal energy of each algorithm iteration in a graph and numerically. 
@@ -455,7 +455,7 @@
           </font>
          </property>
          <property name="styleSheet">
-          <string notr="true">background-color: #cccccc; color: black;</string>
+          <string notr="true">color: black;</string>
          </property>
          <property name="text">
           <string>Made by DvdJ002
