@@ -49,3 +49,7 @@ QString SettingsManager::getAutomaticExportFile(){
     return settings->value(A_X_FILE_KEY).toString();
 }
 
+bool SettingsManager::automaticExportExist(){
+    return (settings->value(A_X_FILE_KEY).toString() != "");
+}
+

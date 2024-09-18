@@ -181,6 +181,21 @@ void MainWindow::display_algo_results(std::string results){
     ui->label_end_results->setText(QString::fromStdString(results));
     ui->button_start->setText("Start");
     jdeWorker = NULL; jdeWorkerThread = NULL;
+
+    if (settingsManager->automaticExportExist()){
+        QMap preferenceMap = settingsManager->getAutomaticExportPreferences();
+        QJsonObject arguments = exportManager->getJSONFromArguments(
+            ui->edit_N->toPlainText().toInt(), ui->edit_seed->toPlainText().toInt(), -1,
+            ui->edit_runtimelmt->toPlainText().toInt(), ui->edit_np->toPlainText().toInt(),
+            ui->edit_target->toPlainText().toDouble(), (ui->checkBox_opt->checkState() == Qt::Checked)
+        );
+
+        exportManager->automaticJdeExport(
+            settingsManager->getAutomaticExportFile(),
+            preferenceMap[settingsManager->A_X_ARGUMENTS_KEY] ? arguments : QJsonObject(),
+            preferenceMap[settingsManager->A_X_RESULTS_KEY] ? QString::fromStdString(results) : "",
+            preferenceMap[settingsManager->A_X_TIMESTAMP_KEY] ? QDateTime::currentDateTime() : QDateTime());
+    }
 }
 
 bool MainWindow::is_input_valid() {

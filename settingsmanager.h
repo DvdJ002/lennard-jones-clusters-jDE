@@ -19,6 +19,7 @@ public:
     QMap<QString, bool> getAutomaticExportPreferences();
     void setAutomaticExportFile(const QString outputFile);
     QString getAutomaticExportFile();
+    bool automaticExportExist();
 
     // Key constants
     const QString A_X_FILE_KEY = "a_x_output_file";

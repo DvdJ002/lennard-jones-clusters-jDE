@@ -20,7 +20,10 @@ public:
 
     QJsonObject importJdeArguments(const QString &filePath);
     bool exportJdeArguments(const QString &filePath, const QJsonObject &arguments);
-    bool exportAll(const QString &filePath, const QJsonObject &arguments, const QString &results);
+    // If &arguments or &results is empty, don't write it to file
+    bool automaticJdeExport(
+        const QString &filePath, const QJsonObject &arguments, const QString &results, const QDateTime &timeStamp
+    );
 
 signals:
 };
