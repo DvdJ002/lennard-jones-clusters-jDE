@@ -46,7 +46,10 @@ void JDEWorker::startAlgorithm(X& best, std::vector<X>& population, unsigned int
                 best = population[i];
                 bestFitness = currentFitness;
                 // Emit the new energy value to update the UI
-                emit fitnessUpdated(bestFitness);
+                auto end = std::chrono::steady_clock::now();
+                auto elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
+                // Time in seconds
+                emit fitnessUpdated(bestFitness, (elapsed/1000.0));
             }
         }
 
@@ -71,9 +74,7 @@ void JDEWorker::startAlgorithm(X& best, std::vector<X>& population, unsigned int
     auto duration = std::chrono::duration_cast<std::chrono::duration<double>>(end - start).count();
 
     // If fitness of best X is lower than (target + epsilon), it is a favorable solution
-    bool isTargetReached;
-    (bestFitness <= target + epsilon) ? isTargetReached = true : isTargetReached = false;
-
+    bool isTargetReached = (bestFitness <= target + epsilon);
 
     // Compile end results and signal the UI
     if (optimizeZeroes) { fixZeroes(best.coords); }

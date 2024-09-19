@@ -41,7 +41,7 @@ QJsonObject ExportManager::importJdeArguments(const QString &filePath) {
     QJsonParseError parseError;
     QJsonDocument doc = QJsonDocument::fromJson(fileData, &parseError);
     if (parseError.error != QJsonParseError::NoError)
-        return QJsonObject();  // Handle JSON parsing error
+        return QJsonObject();
 
     return doc.object();
 }
@@ -54,20 +54,15 @@ bool ExportManager::automaticJdeExport(
         return false;
 
     std::string outputString = "";
-    // TODO: Timestamp currently symbolic, need to acquire it from thread
     if (!timeStamp.isNull()) {
-        //file.write("[" + timeStamp.toString("yyyy-MM-dd HH:mm:ss").toUtf8() + "]\n");
         outputString += "[" + timeStamp.toString("yyyy-MM-dd HH:mm:ss").toUtf8() + "]\n";
     }
     // TODO: Possibly write arguments in human form?
     if (!arguments.isEmpty()){
         QJsonDocument doc(arguments);
-        //file.write(doc.toJson(QJsonDocument::Indented));
-        //file.write("\n");
         outputString += doc.toJson(QJsonDocument::Indented).toStdString() + "\n";
     }
     if (!results.isEmpty()){
-        //file.write(results.toUtf8());
         outputString += results.toUtf8();
         outputString += "\n---------------------------------------\n";
     }

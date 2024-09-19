@@ -12,7 +12,7 @@
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent), ui(new Ui::MainWindow), exportManager(new ExportManager()),
-    settingsManager(new SettingsManager)
+    settingsManager(new SettingsManager), mainFitnessGraph(new FitnessGraph)
 {
     ui->setupUi(this);
 
@@ -48,10 +48,12 @@ void MainWindow::setup_ui_elements(){
     ui->edit_N->setFont(font);
     ui->edit_seed->setFont(font);
     ui->edit_target->setFont(font);
-    ui->edit_target->setText("-28.422532");
     ui->edit_runtimelmt->setFont(font);
     ui->edit_np->setFont(font);
+
+    ui->graphLayout->addWidget(mainFitnessGraph);
 }
+
 
 /* ---------------------BUTTON SLOTS--------------------- */
 
@@ -62,7 +64,6 @@ void MainWindow::on_button_info_clicked() { stackedWidget->setCurrentIndex(2); }
 void MainWindow::on_button_start_clicked() {
     // DO NOT START ANOTHER THREAD IF PREV INSTANCE IS RUNNING
     if (jdeWorker || jdeWorkerThread) {
-        //prompt_warning_message("Unallowed action", "Cannot start another instance while algorithm is running");
         jdeWorker->terminateExecution();
         ui->button_start->setText("Start");
         jdeWorker = NULL; jdeWorkerThread = NULL;
@@ -91,6 +92,7 @@ void MainWindow::on_button_start_clicked() {
 
     start_worker();
 }
+
 
 /* ---------------------MENU ACTION SLOTS--------------------- */
 
@@ -169,10 +171,15 @@ void MainWindow::start_worker(){
     jdeWorkerThread->start();
 }
 
-void MainWindow::update_best_fitness(double bestFitness){
+// Received a new best energy (with timestamp) from the algorithm
+void MainWindow::update_best_fitness(double bestFitness, double elapsed){
     ui->label_livedata->setText(
-        QString::number(bestFitness) + "\n" + ui->label_livedata->text()
+        QString::number(bestFitness) + " . . . . . . . (" + QString::number(elapsed) +
+        + "s)\n" + ui->label_livedata->text()
     );
+
+    // Update graph values
+    mainFitnessGraph->updateGraph(bestFitness, elapsed);
 }
 
 // This function is called when the jde thread is finished
@@ -224,6 +231,9 @@ bool MainWindow::is_input_valid() {
     }
     return true;
 }
+
+
+/* ---------------------QMESSAGE BOX (MIGHT DECOUPLE LATER)--------------------- */
 
 void MainWindow::prompt_warning_message(std::string warningText, std::string infoText){
     QMessageBox msgBox;

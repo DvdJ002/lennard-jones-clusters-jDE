@@ -79,7 +79,7 @@
      <bool>false</bool>
     </property>
     <property name="currentIndex">
-     <number>2</number>
+     <number>0</number>
     </property>
     <widget class="QWidget" name="page">
      <widget class="QWidget" name="gridLayoutWidget">
@@ -332,19 +332,6 @@
        <set>Qt::AlignmentFlag::AlignCenter</set>
       </property>
      </widget>
-     <widget class="QLabel" name="label_11">
-      <property name="geometry">
-       <rect>
-        <x>600</x>
-        <y>200</y>
-        <width>341</width>
-        <height>131</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>GRAPH AND OTHER DATA</string>
-      </property>
-     </widget>
      <widget class="QLabel" name="label_livedata">
       <property name="geometry">
        <rect>
@@ -382,6 +369,17 @@
       <property name="alignment">
        <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignTop</set>
       </property>
+     </widget>
+     <widget class="QWidget" name="verticalLayoutWidget">
+      <property name="geometry">
+       <rect>
+        <x>460</x>
+        <y>10</y>
+        <width>711</width>
+        <height>401</height>
+       </rect>
+      </property>
+      <layout class="QVBoxLayout" name="graphLayout"/>
      </widget>
     </widget>
     <widget class="QWidget" name="page_2">
@@ -516,7 +514,15 @@ Made with QT (C++)</string>
     </property>
     <addaction name="actionExit"/>
    </widget>
+   <widget class="QMenu" name="menuStatistics">
+    <property name="title">
+     <string>Statistics</string>
+    </property>
+    <addaction name="actionjDE_Stats"/>
+    <addaction name="actionApplication_stats"/>
+   </widget>
    <addaction name="menujDE"/>
+   <addaction name="menuStatistics"/>
    <addaction name="menuApp"/>
   </widget>
   <action name="actionImport_jDE_arguments">
@@ -547,6 +553,16 @@ Made with QT (C++)</string>
   <action name="actionAutomatic_jDE_export">
    <property name="text">
     <string>Automatic export</string>
+   </property>
+  </action>
+  <action name="actionjDE_Stats">
+   <property name="text">
+    <string>jDE stats</string>
+   </property>
+  </action>
+  <action name="actionApplication_stats">
+   <property name="text">
+    <string>Application stats</string>
    </property>
   </action>
  </widget>

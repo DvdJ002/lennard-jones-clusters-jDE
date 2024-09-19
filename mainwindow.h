@@ -6,7 +6,7 @@
 #include "jdeworker.h"
 #include "exportmanager.h"
 #include "settingsmanager.h"
-
+#include "fitnessgraph.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -42,12 +42,13 @@ private:
     ExportManager *exportManager;
     JDEWorker *jdeWorker = NULL; QThread* jdeWorkerThread = NULL;
     SettingsManager *settingsManager;
+    FitnessGraph *mainFitnessGraph;
 
 
     void setup_ui_elements();
     void initialize_jde_worker();
     void start_worker();
-    void update_best_fitness(double fitness);
+    void update_best_fitness(double fitness, double elapsed);
     void display_algo_results(std::string results);
     bool is_input_valid();
     void prompt_warning_message(std::string infoText, std::string warningText);

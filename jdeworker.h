@@ -20,7 +20,7 @@ public:
     void terminateExecution();
 
 signals:
-    void fitnessUpdated(double fitness);  // Signal to notify UI of the new best fitness
+    void fitnessUpdated(double fitness, double elapsed);  // Signal to notify UI of the new best fitness
     void sendAlgorithmResults(std::string results);
     void taskFinished();
 
