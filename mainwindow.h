@@ -36,6 +36,8 @@ private slots:
     void action_export_jde_arguments();
     void action_jde_automatic_export();
 
+    void on_button_resetgraph_clicked();
+
 private:
     Ui::MainWindow *ui;
     QStackedWidget *stackedWidget;
@@ -50,6 +52,7 @@ private:
     void start_worker();
     void update_best_fitness(double fitness, double elapsed);
     void display_algo_results(std::string results);
+    bool is_jde_running();
     bool is_input_valid();
     void prompt_warning_message(std::string infoText, std::string warningText);
     void prompt_info_message(std::string infoText);

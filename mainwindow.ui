@@ -381,6 +381,19 @@
       </property>
       <layout class="QVBoxLayout" name="graphLayout"/>
      </widget>
+     <widget class="QPushButton" name="button_resetgraph">
+      <property name="geometry">
+       <rect>
+        <x>980</x>
+        <y>410</y>
+        <width>171</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Reset graph</string>
+      </property>
+     </widget>
     </widget>
     <widget class="QWidget" name="page_2">
      <widget class="QLabel" name="label_2">

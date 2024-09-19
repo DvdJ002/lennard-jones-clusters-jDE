@@ -57,13 +57,22 @@ void MainWindow::setup_ui_elements(){
 
 /* ---------------------BUTTON SLOTS--------------------- */
 
+// Slots for switching between screens
 void MainWindow::on_button_mainscreen_clicked() { stackedWidget->setCurrentIndex(0); }
 void MainWindow::on_button_screen2_clicked() { stackedWidget->setCurrentIndex(1); }
 void MainWindow::on_button_info_clicked() { stackedWidget->setCurrentIndex(2); }
 
+void MainWindow::on_button_resetgraph_clicked() {
+    if (is_jde_running()) {
+        prompt_warning_message("Invalid action", "Cannot reset graph while jDE instance is running");
+        return;
+    }
+    mainFitnessGraph->resetGraph();
+}
+
 void MainWindow::on_button_start_clicked() {
     // DO NOT START ANOTHER THREAD IF PREV INSTANCE IS RUNNING
-    if (jdeWorker || jdeWorkerThread) {
+    if (is_jde_running()) {
         jdeWorker->terminateExecution();
         return;
     }
@@ -207,6 +216,10 @@ void MainWindow::display_algo_results(std::string results){
             preferenceMap[settingsManager->A_X_RESULTS_KEY] ? QString::fromStdString(results) : "",
             preferenceMap[settingsManager->A_X_TIMESTAMP_KEY] ? QDateTime::currentDateTime() : QDateTime());
     }
+}
+
+bool MainWindow::is_jde_running(){
+    return (jdeWorker || jdeWorkerThread);
 }
 
 bool MainWindow::is_input_valid() {
