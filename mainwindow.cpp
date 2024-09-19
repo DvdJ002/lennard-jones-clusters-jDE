@@ -12,7 +12,7 @@
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent), ui(new Ui::MainWindow), exportManager(new ExportManager()),
-    settingsManager(new SettingsManager), mainFitnessGraph(new FitnessGraph)
+    settingsManager(new SettingsManager), mainFitnessGraph(new FitnessGraph())
 {
     ui->setupUi(this);
 
@@ -65,8 +65,6 @@ void MainWindow::on_button_start_clicked() {
     // DO NOT START ANOTHER THREAD IF PREV INSTANCE IS RUNNING
     if (jdeWorker || jdeWorkerThread) {
         jdeWorker->terminateExecution();
-        ui->button_start->setText("Start");
-        jdeWorker = NULL; jdeWorkerThread = NULL;
         return;
     }
 
@@ -163,6 +161,11 @@ void MainWindow::action_jde_automatic_export(){
 void MainWindow::start_worker(){
     ui->label_livedata->setText("");
     ui->button_start->setText("Stop");
+
+    // Reset graph values before new instance starts
+    mainFitnessGraph->resetGraph();
+    mainFitnessGraph->setTargetEnergy(ui->edit_target->toPlainText().toDouble());
+
     jdeWorker->setArguments(
         ui->edit_N->toPlainText().toInt(), ui->edit_seed->toPlainText().toInt(), -1,
         ui->edit_runtimelmt->toPlainText().toInt(), ui->edit_np->toPlainText().toInt(),
@@ -189,6 +192,7 @@ void MainWindow::display_algo_results(std::string results){
     ui->button_start->setText("Start");
     jdeWorker = NULL; jdeWorkerThread = NULL;
 
+    // Automatically export the algorithm output if needed
     if (settingsManager->automaticExportExist()){
         QMap preferenceMap = settingsManager->getAutomaticExportPreferences();
         QJsonObject arguments = exportManager->getJSONFromArguments(
