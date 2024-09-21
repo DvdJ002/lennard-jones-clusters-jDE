@@ -38,6 +38,8 @@ private slots:
 
     void on_button_resetgraph_clicked();
 
+    void on_button_savegraphsettings_clicked();
+
 private:
     Ui::MainWindow *ui;
     QStackedWidget *stackedWidget;
@@ -56,5 +58,6 @@ private:
     bool is_input_valid();
     void prompt_warning_message(std::string infoText, std::string warningText);
     void prompt_info_message(std::string infoText);
+    void applyGraphSettings();
 };
 #endif // MAINWINDOW_H

@@ -16,6 +16,7 @@ public:
     void setTargetEnergy(double target);
     void updateGraph(double newFitness, double timeElapsed);
     void resetGraph();
+    void setPreferences(bool darkMode, bool displayTarget, int yRangeBottom, int yRangeTop, bool clearLine);
 
 private:
     QChart *chart;
@@ -23,11 +24,12 @@ private:
     QValueAxis *axisX;
     QValueAxis *axisY;
     double targetValue = 0.0;
+    bool displayTargetValue, clearLineWhenStart;
 
-    // Constants
+    // Range values
     const int X_RANGE_INIT = 6.0;
-    const int Y_RANGE_LOW = -29.0;
-    const int Y_RANGE_HIGH = 1.0;
+    int Y_RANGE_LOW = -29.0;
+    int Y_RANGE_HIGH = 1.0;
 };
 
 #endif // FITNESSGRAPH_H

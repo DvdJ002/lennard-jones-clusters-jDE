@@ -54,8 +54,10 @@ FitnessGraph::FitnessGraph(QWidget *parent) : QWidget(parent),
 // Time elapsed is in seconds
 void FitnessGraph::updateGraph(double newFitness, double timeElapsed){
     series->append(timeElapsed, newFitness);
-    targetLine->append(axisX->min(), targetValue);
-    targetLine->append(axisX->max(), targetValue);
+    if (displayTargetValue) {
+        targetLine->append(axisX->min(), targetValue);
+        targetLine->append(axisX->max(), targetValue);
+    }
 
     // Extend X axis if out of range
     if (timeElapsed > axisX->max()) {
@@ -72,3 +74,20 @@ void FitnessGraph::resetGraph() {
 void FitnessGraph::setTargetEnergy(double target){
     this->targetValue = target;
 }
+
+void FitnessGraph::setPreferences(
+    bool axisTitle, bool displayTarget, int yRangeLow, int yRangeHigh, bool clearLine)
+{
+    //darkMode ? chart->setTheme(QChart::ChartThemeDark) : chart->setTheme(QChart::ChartThemeHighContrast);
+    if (axisTitle){
+        axisX->setTitleText(""); axisY->setTitleText("");
+    } else {
+        axisX->setTitleText("Runtime"); axisY->setTitleText("Best energy");
+    }
+    this->displayTargetValue = displayTarget;
+    Y_RANGE_LOW = yRangeLow;
+    Y_RANGE_HIGH = yRangeHigh;
+    axisY->setRange(Y_RANGE_LOW, Y_RANGE_HIGH);
+    this->clearLineWhenStart = clearLine;
+}
+

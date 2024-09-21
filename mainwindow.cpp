@@ -20,6 +20,7 @@ MainWindow::MainWindow(QWidget *parent)
     this->setFixedSize(this->size());
     this->setWindowFlags(Qt::Window | Qt::MSWindowsFixedSizeDialogHint);
     setup_ui_elements();
+    applyGraphSettings();
 }
 
 
@@ -52,6 +53,15 @@ void MainWindow::setup_ui_elements(){
     ui->edit_np->setFont(font);
 
     ui->graphLayout->addWidget(mainFitnessGraph);
+
+    // Fill elements with graph settings
+    // TODO: Y RANGE FIELD
+    // QString rangeStr = settingsManager->getGraphSettingsYRange()[0].
+    // ui->edit_yrange->setText();
+    QMap preferenceMap = settingsManager->getGraphSettingsCheckbox();
+    ui->checkBox_axistitle->setChecked(preferenceMap[settingsManager->G_S_AXIS_TITLE_KEY]);
+    ui->checkBox_targetline->setChecked(preferenceMap[settingsManager->G_S_DISPLAY_TARGET_KEY]);
+    ui->checkBox_clearline->setChecked(preferenceMap[settingsManager->G_S_CLEAR_LINE_KEY]);
 }
 
 
@@ -98,6 +108,23 @@ void MainWindow::on_button_start_clicked() {
     connect(jdeWorkerThread, &QThread::finished, jdeWorkerThread, &QObject::deleteLater);
 
     start_worker();
+}
+
+void MainWindow::on_button_savegraphsettings_clicked()
+{
+    if (is_jde_running()) {
+        prompt_warning_message("Invalid action", "Cannot save graph settings while jDE instance is running");
+        return;
+    }
+
+    settingsManager->setGraphSettings(
+        ui->checkBox_axistitle->isChecked(), ui->checkBox_targetline->isChecked(),
+        ui->edit_yrange->toPlainText(), ui->checkBox_clearline->isChecked()
+    );
+
+    // Graph preferences acquired from settings manager
+    applyGraphSettings();
+    prompt_info_message("Graph preferences saved");
 }
 
 
@@ -250,7 +277,7 @@ bool MainWindow::is_input_valid() {
 }
 
 
-/* ---------------------QMESSAGE BOX (MIGHT DECOUPLE LATER)--------------------- */
+/* --------------------- OTHER (MIGHT DECOUPLE LATER)--------------------- */
 
 void MainWindow::prompt_warning_message(std::string warningText, std::string infoText){
     QMessageBox msgBox;
@@ -267,6 +294,21 @@ void MainWindow::prompt_info_message(std::string infoText){
     msgBox.exec();
 }
 
+void MainWindow::applyGraphSettings(){
+    // Set graph preferences acquired from settings manager
+    QMap preferenceMap = settingsManager->getGraphSettingsCheckbox();
+    QVector<int> yRangeVec = settingsManager->getGraphSettingsYRange();
+    int yLow = -29, yHigh = 1;
+    if (!yRangeVec.isEmpty()){
+        yLow = yRangeVec[0];
+        yHigh = yRangeVec[1];
+    }
+    mainFitnessGraph->setPreferences(
+        preferenceMap[settingsManager->G_S_AXIS_TITLE_KEY],
+        preferenceMap[settingsManager->G_S_DISPLAY_TARGET_KEY],
+        yLow, yHigh, preferenceMap[settingsManager->G_S_CLEAR_LINE_KEY]
+    );
+}
 
 MainWindow::~MainWindow()
 {
@@ -275,5 +317,4 @@ MainWindow::~MainWindow()
     delete jdeWorker;
     delete jdeWorkerThread;
 }
-
 

@@ -11,6 +11,12 @@ void SettingsManager::initializeSettings(){
         settings->setValue(A_X_RESULTS_KEY, false);
         settings->setValue(A_X_TIMESTAMP_KEY, false);
     }
+    if (!settings->contains(G_S_AXIS_TITLE_KEY)) {
+        settings->setValue(G_S_AXIS_TITLE_KEY, false);
+        settings->setValue(G_S_DISPLAY_TARGET_KEY, false);
+        settings->setValue(G_S_Y_RANGE_KEY, "-29:1");
+        settings->setValue(G_S_CLEAR_LINE_KEY, false);
+    }
 }
 
 void SettingsManager::setValue(const QString &key, const QVariant &value) {
@@ -52,4 +58,40 @@ QString SettingsManager::getAutomaticExportFile(){
 bool SettingsManager::automaticExportExist(){
     return (settings->value(A_X_FILE_KEY).toString() != "");
 }
+
+/*---------------- Automatic export specific functions ----------------*/
+
+void SettingsManager::setGraphSettings(
+    const bool axisTitle, const bool displayTarget, const QString yRange, const bool clearLine)
+{
+    settings->setValue(G_S_AXIS_TITLE_KEY, axisTitle);
+    settings->setValue(G_S_DISPLAY_TARGET_KEY, displayTarget);
+    settings->setValue(G_S_Y_RANGE_KEY, yRange);
+    settings->setValue(G_S_CLEAR_LINE_KEY, clearLine);
+}
+
+QMap<QString, bool> SettingsManager::getGraphSettingsCheckbox(){
+    QMap<QString, bool> map;
+    map[G_S_AXIS_TITLE_KEY] = settings->value(G_S_AXIS_TITLE_KEY, -1).toBool();
+    map[G_S_DISPLAY_TARGET_KEY] = settings->value(G_S_DISPLAY_TARGET_KEY, -1).toBool();
+    map[G_S_CLEAR_LINE_KEY] = settings->value(G_S_CLEAR_LINE_KEY, -1).toBool();
+    return map;
+}
+
+// Returns a vector with bottom and upper range, empty if unset setting
+QVector<int> SettingsManager::getGraphSettingsYRange(){
+    QStringList splits = settings->value(G_S_Y_RANGE_KEY, -1).toString().split(":");
+    QVector<int> splitsVec(2);
+    if (splits.size() == 2) {
+        splitsVec[0] = splits[0].toInt();
+        splitsVec[1] = splits[1].toInt();
+    } else {
+        return QVector<int>();
+    }
+    return splitsVec;
+}
+
+
+
+
 
