@@ -23,6 +23,7 @@ public:
 
     // Graph settings specific functions
     void setGraphSettings(const bool darkMode, const bool displayTarget, const QString yRange, const bool clearLine);
+    void setGraphSettingsYRange(const QString yRange);
     QMap<QString, bool> getGraphSettingsCheckbox();
     QVector<int> getGraphSettingsYRange();
 

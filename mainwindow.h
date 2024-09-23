@@ -40,6 +40,8 @@ private slots:
 
     void on_button_savegraphsettings_clicked();
 
+    void on_button_resetyrange_clicked();
+
 private:
     Ui::MainWindow *ui;
     QStackedWidget *stackedWidget;

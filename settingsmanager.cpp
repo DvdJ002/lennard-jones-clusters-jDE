@@ -59,7 +59,8 @@ bool SettingsManager::automaticExportExist(){
     return (settings->value(A_X_FILE_KEY).toString() != "");
 }
 
-/*---------------- Automatic export specific functions ----------------*/
+
+/*---------------- Graph specific functions ----------------*/
 
 void SettingsManager::setGraphSettings(
     const bool axisTitle, const bool displayTarget, const QString yRange, const bool clearLine)
@@ -68,6 +69,10 @@ void SettingsManager::setGraphSettings(
     settings->setValue(G_S_DISPLAY_TARGET_KEY, displayTarget);
     settings->setValue(G_S_Y_RANGE_KEY, yRange);
     settings->setValue(G_S_CLEAR_LINE_KEY, clearLine);
+}
+
+void SettingsManager::setGraphSettingsYRange(const QString yRange){
+    settings->setValue(G_S_Y_RANGE_KEY, yRange);
 }
 
 QMap<QString, bool> SettingsManager::getGraphSettingsCheckbox(){

@@ -73,13 +73,14 @@ private slots:
     }
 
     void saveSettings() {
-        if (fileLineEdit->text().isEmpty()) {
-            QMessageBox msgBox;
-            msgBox.setText(QString::fromStdString("Please select an output file"));
-            msgBox.setIcon(QMessageBox::Warning);
-            msgBox.exec();
-            return;
+        if (!fileLineEdit->text().isEmpty()) {
+            QFileInfo fileInfo(fileLineEdit->text());
+            if (!fileInfo.exists() || !fileInfo.isFile()) {
+                QMessageBox::warning(this, tr("Invalid File"), tr("Invalid file path!"));
+                return;
+            }
         }
+
         settingsManager->setAutomaticExportFile(fileLineEdit->text());
         settingsManager->setAutomaticExportPreferences(
             checkBoxArgs->isChecked(), checkBoxResults->isChecked(), checkBoxTime->isChecked()

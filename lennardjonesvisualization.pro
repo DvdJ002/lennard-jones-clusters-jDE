@@ -18,6 +18,7 @@ SOURCES += \
     settingsmanager.cpp
 
 HEADERS += \
+    ColorPicker.h \
     autoexportdialog.h \
     exportmanager.h \
     fitnessgraph.h \

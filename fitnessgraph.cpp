@@ -2,7 +2,7 @@
 
 FitnessGraph::FitnessGraph(QWidget *parent) : QWidget(parent),
     chart(new QChart), targetLine(new QLineSeries), axisX(new QValueAxis),
-    axisY(new QValueAxis), seriesList(new QVector<QLineSeries*>())
+    axisY(new QValueAxis), seriesList(new QVector<QLineSeries*>()), colorPicker(new ColorPicker(6))
 {
     // Create a chart view
     QChartView *chartView = new QChartView(chart, this);
@@ -43,7 +43,16 @@ FitnessGraph::FitnessGraph(QWidget *parent) : QWidget(parent),
     QVBoxLayout *layout = new QVBoxLayout(this);
     layout->addWidget(chartView);
     setLayout(layout);
+
+    // Set the colors that the lines will be assigned randomly
+    colorPicker->addColor(Qt::black);
+    colorPicker->addColor(Qt::blue);
+    colorPicker->addColor(Qt::green);
+    colorPicker->addColor(Qt::darkRed);
+    colorPicker->addColor(Qt::magenta);
+    colorPicker->addColor(Qt::darkGray);
 }
+
 
 // Time elapsed is in seconds
 void FitnessGraph::updateGraph(double newFitness, double timeElapsed){
@@ -63,7 +72,7 @@ void FitnessGraph::updateGraph(double newFitness, double timeElapsed){
 // TODO: Different color line (if possible)?
 void FitnessGraph::addLineToChart(){
     QLineSeries *newSeries = new QLineSeries();
-    QPen pen(Qt::black);
+    QPen pen((*colorPicker)[rand() % 6]);
     newSeries->setName("Energy line " + QString::number(seriesList->size() + 1));
     newSeries->setPen(pen);
 
@@ -105,6 +114,12 @@ void FitnessGraph::setTargetEnergy(double target){
     this->targetValue = target;
 }
 
+void FitnessGraph::setYRange(int yLow, int YHigh){
+    Y_RANGE_LOW = yLow;
+    Y_RANGE_HIGH = YHigh;
+    axisY->setRange(Y_RANGE_LOW, Y_RANGE_HIGH);
+}
+
 void FitnessGraph::setPreferences(
     bool axisTitle, bool displayTarget, int yRangeLow, int yRangeHigh, bool clearLine)
 {
@@ -114,9 +129,18 @@ void FitnessGraph::setPreferences(
         axisX->setTitleText("Runtime"); axisY->setTitleText("Best energy");
     }
     this->displayTargetValue = displayTarget;
-    Y_RANGE_LOW = yRangeLow;
-    Y_RANGE_HIGH = yRangeHigh;
-    axisY->setRange(Y_RANGE_LOW, Y_RANGE_HIGH);
+    this->setYRange(yRangeLow, yRangeHigh);
     this->clearLineWhenStart = clearLine;
+}
+
+FitnessGraph::~FitnessGraph()
+{
+    delete targetLine;
+    delete axisX;
+    delete axisY;
+
+    delete seriesList;
+
+    delete colorPicker;
 }
 

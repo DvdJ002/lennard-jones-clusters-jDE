@@ -385,7 +385,7 @@
       <property name="geometry">
        <rect>
         <x>980</x>
-        <y>410</y>
+        <y>400</y>
         <width>171</width>
         <height>31</height>
        </rect>
@@ -486,6 +486,19 @@
         </widget>
        </item>
       </layout>
+     </widget>
+     <widget class="QPushButton" name="button_resetyrange">
+      <property name="geometry">
+       <rect>
+        <x>789</x>
+        <y>480</y>
+        <width>81</width>
+        <height>24</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Reset range</string>
+      </property>
      </widget>
     </widget>
     <widget class="QWidget" name="page_2">

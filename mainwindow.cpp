@@ -127,6 +127,15 @@ void MainWindow::on_button_savegraphsettings_clicked()
 }
 
 
+// Resets the Y range setting on graph to -29.0:1.0
+void MainWindow::on_button_resetyrange_clicked()
+{
+    mainFitnessGraph->setYRange(-29.0, 1.0);
+    settingsManager->setGraphSettingsYRange("-29:1");
+    ui->edit_yrange->setText("-29:1");
+}
+
+
 /* ---------------------MENU ACTION SLOTS--------------------- */
 
 void MainWindow::quit_app(){
@@ -315,5 +324,9 @@ MainWindow::~MainWindow()
     delete stackedWidget;
     delete jdeWorker;
     delete jdeWorkerThread;
+
+    delete exportManager;
+    delete settingsManager;
 }
+
 
