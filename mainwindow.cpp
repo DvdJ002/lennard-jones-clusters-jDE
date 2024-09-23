@@ -55,13 +55,12 @@ void MainWindow::setup_ui_elements(){
     ui->graphLayout->addWidget(mainFitnessGraph);
 
     // Fill elements with graph settings
-    // TODO: Y RANGE FIELD
-    // QString rangeStr = settingsManager->getGraphSettingsYRange()[0].
-    // ui->edit_yrange->setText();
+    QVector<int> rangeVec = settingsManager->getGraphSettingsYRange();
     QMap preferenceMap = settingsManager->getGraphSettingsCheckbox();
     ui->checkBox_axistitle->setChecked(preferenceMap[settingsManager->G_S_AXIS_TITLE_KEY]);
     ui->checkBox_targetline->setChecked(preferenceMap[settingsManager->G_S_DISPLAY_TARGET_KEY]);
     ui->checkBox_clearline->setChecked(preferenceMap[settingsManager->G_S_CLEAR_LINE_KEY]);
+    ui->edit_yrange->setText(QString::number(rangeVec[0]) + ":" + QString::number(rangeVec[1]));
 }
 
 
@@ -199,8 +198,8 @@ void MainWindow::start_worker(){
     ui->button_start->setText("Stop");
 
     // Reset graph values before new instance starts
-    mainFitnessGraph->resetGraph();
     mainFitnessGraph->setTargetEnergy(ui->edit_target->toPlainText().toDouble());
+    mainFitnessGraph->newRunInstance();
 
     jdeWorker->setArguments(
         ui->edit_N->toPlainText().toInt(), ui->edit_seed->toPlainText().toInt(), -1,

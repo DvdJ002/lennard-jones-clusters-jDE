@@ -15,14 +15,17 @@ public:
     explicit FitnessGraph(QWidget *parent = nullptr);
     void setTargetEnergy(double target);
     void updateGraph(double newFitness, double timeElapsed);
+    void addLineToChart();
     void resetGraph();
+    void newRunInstance();
+    void clearAllSeries();
     void setPreferences(bool darkMode, bool displayTarget, int yRangeBottom, int yRangeTop, bool clearLine);
 
 private:
     QChart *chart;
-    QLineSeries *series, *targetLine;
-    QValueAxis *axisX;
-    QValueAxis *axisY;
+    QLineSeries *targetLine;
+    QValueAxis *axisX, *axisY;
+    QVector<QLineSeries*> *seriesList;
     double targetValue = 0.0;
     bool displayTargetValue, clearLineWhenStart;
 
