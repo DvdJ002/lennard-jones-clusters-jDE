@@ -29,18 +29,18 @@ private slots:
     void on_button_screen2_clicked();
     void on_button_info_clicked();
     void on_button_start_clicked();
+    void on_button_resetgraph_clicked();
+    void on_button_savegraphsettings_clicked();
+    void on_button_resetyrange_clicked();
 
     // Menu action slots
     void quit_app();
     void action_import_jde_arguments();
     void action_export_jde_arguments();
     void action_jde_automatic_export();
+    void action_export_jde_graph();
 
-    void on_button_resetgraph_clicked();
 
-    void on_button_savegraphsettings_clicked();
-
-    void on_button_resetyrange_clicked();
 
 private:
     Ui::MainWindow *ui;

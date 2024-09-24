@@ -17,6 +17,10 @@ public:
         colorList.push_back(c);
     }
 
+    const QColor& randomColor(){
+        return colorList[rand() % colorList.size()];
+    }
+
     const QColor& operator[](int index)
     {
         return colorList.at(index);

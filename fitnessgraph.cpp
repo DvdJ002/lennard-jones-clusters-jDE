@@ -72,7 +72,7 @@ void FitnessGraph::updateGraph(double newFitness, double timeElapsed){
 // TODO: Different color line (if possible)?
 void FitnessGraph::addLineToChart(){
     QLineSeries *newSeries = new QLineSeries();
-    QPen pen((*colorPicker)[rand() % 6]);
+    QPen pen(colorPicker->randomColor());
     newSeries->setName("Energy line " + QString::number(seriesList->size() + 1));
     newSeries->setPen(pen);
 
@@ -133,6 +133,10 @@ void FitnessGraph::setPreferences(
     this->clearLineWhenStart = clearLine;
 }
 
+QVector<QLineSeries*>* FitnessGraph::getLinesForExport(){
+    return seriesList;
+}
+
 FitnessGraph::~FitnessGraph()
 {
     delete targetLine;
@@ -140,7 +144,6 @@ FitnessGraph::~FitnessGraph()
     delete axisY;
 
     delete seriesList;
-
     delete colorPicker;
 }
 

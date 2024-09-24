@@ -22,7 +22,12 @@ public:
     void setPreferences(bool darkMode, bool displayTarget, int yRangeBottom, int yRangeTop, bool clearLine);
     void setTargetEnergy(double target);
     void setYRange(int yLow, int yHigh);
+    QVector<QLineSeries*>* getLinesForExport();
     ~FitnessGraph();
+
+    const int X_RANGE_INIT = 6.0;
+    const int Y_RANGE_LOW_INIT =  -29.0;
+    const int Y_RANGE_HIGH_INIT =  1.0;
 
 private:
     QChart *chart;
@@ -34,7 +39,6 @@ private:
     bool displayTargetValue, clearLineWhenStart;
 
     // Range values
-    const int X_RANGE_INIT = 6.0;
     int Y_RANGE_LOW = -29.0;
     int Y_RANGE_HIGH = 1.0;
 };

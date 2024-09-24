@@ -1,5 +1,6 @@
 #include "exportmanager.h"
 
+#include <QJsonArray>
 
 ExportManager::ExportManager(QObject *parent) : QObject{parent}
 {}
@@ -30,6 +31,7 @@ bool ExportManager::exportJdeArguments(const QString &filePath, const QJsonObjec
     return true;
 }
 
+// Empty JSON object = error in importing
 QJsonObject ExportManager::importJdeArguments(const QString &filePath) {
     QFile file(filePath);
     if (!file.open(QIODevice::ReadOnly))
@@ -73,3 +75,47 @@ bool ExportManager::automaticJdeExport(
     return true;
 }
 
+
+QJsonObject ExportManager::getJSONFromSeriesList(QVector<QLineSeries*> *seriesList){
+    QJsonObject rootObject;  // Holds the entire JSON structure
+    QJsonArray seriesArray;
+
+    for (int i = 0; i < seriesList->size(); ++i) {
+        QLineSeries *series = seriesList->at(i);
+        QJsonArray pointsArray;  // Holds points of the QLineSeries
+
+        for (const QPointF &point : series->points()) {
+            QJsonObject pointObject;
+            pointObject["x"] = point.x();
+            pointObject["y"] = point.y();
+            pointsArray.append(pointObject);
+        }
+
+        QJsonObject seriesObject;
+        seriesObject["name"] = series->name();  // If series has a name
+        seriesObject["points"] = pointsArray;
+
+        // Append JSON object to the series array
+        seriesArray.append(seriesObject);
+    }
+
+    // Add series array to root object
+    rootObject["seriesList"] = seriesArray;
+
+    // Convert the QJsonObject into a QJsonDocument
+    return rootObject;
+}
+
+
+bool ExportManager::exportGraphValues(const QString &filePath, QVector<QLineSeries*> *seriesList){
+    QFile file(filePath);
+    if (!file.open(QIODevice::WriteOnly))
+        return false;
+
+
+    QJsonDocument doc(this->getJSONFromSeriesList(seriesList));
+    file.write(doc.toJson(QJsonDocument::Indented));
+    file.close();
+
+    return true;
+}

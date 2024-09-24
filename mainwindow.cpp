@@ -38,6 +38,7 @@ void MainWindow::setup_ui_elements(){
     connect(ui->actionImport_jDE_arguments, &QAction::triggered, this, &MainWindow::action_import_jde_arguments);
     connect(ui->actionExport_jDE_arguments, &QAction::triggered, this, &MainWindow::action_export_jde_arguments);
     connect(ui->actionAutomatic_jDE_export, &QAction::triggered, this, &MainWindow::action_jde_automatic_export);
+    connect(ui->actionExport_jDE_graph, &QAction::triggered, this, &MainWindow::action_export_jde_graph);
 
 
     // Input data form styling
@@ -130,9 +131,12 @@ void MainWindow::on_button_savegraphsettings_clicked()
 // Resets the Y range setting on graph to -29.0:1.0
 void MainWindow::on_button_resetyrange_clicked()
 {
-    mainFitnessGraph->setYRange(-29.0, 1.0);
-    settingsManager->setGraphSettingsYRange("-29:1");
-    ui->edit_yrange->setText("-29:1");
+    mainFitnessGraph->setYRange(mainFitnessGraph->Y_RANGE_LOW_INIT, mainFitnessGraph->Y_RANGE_HIGH_INIT);
+    QString formattedString =
+        QString::number(mainFitnessGraph->Y_RANGE_LOW_INIT) + ":" +
+        QString::number(mainFitnessGraph->Y_RANGE_HIGH_INIT);
+    settingsManager->setGraphSettingsYRange(formattedString);
+    ui->edit_yrange->setText(formattedString);
 }
 
 
@@ -144,8 +148,12 @@ void MainWindow::quit_app(){
 
 void MainWindow::action_import_jde_arguments(){
         QString filePath = QFileDialog::getOpenFileName(this, tr("Import arguments"), "", tr("JSON Files (*.json)"));
+        if (filePath.isEmpty()) {
+            return;
+        }
+
         QJsonObject arguments = exportManager->importJdeArguments(filePath);
-        if (filePath.isEmpty() || arguments.isEmpty()) {
+        if (arguments.isEmpty()){
             prompt_warning_message("Import Error", "Failed to import jDE arguments");
             return;
         }
@@ -187,9 +195,10 @@ void MainWindow::action_export_jde_arguments(){
     QFileInfo fileInfo(filePath);
     if (!exportManager->exportJdeArguments(filePath, arguments)){
         prompt_warning_message("Export Error", "Failed to export jDE arguments to" + fileInfo.fileName().toStdString());
-    } else {
-        prompt_info_message("jDE arguments exported to " + fileInfo.fileName().toStdString());
+        return;
     }
+    prompt_info_message("jDE arguments exported to " + fileInfo.fileName().toStdString());
+
 }
 
 void MainWindow::action_jde_automatic_export(){
@@ -197,6 +206,20 @@ void MainWindow::action_jde_automatic_export(){
     if (dialog.exec() == QDialog::Accepted){
         prompt_info_message("Automatic export preferences saved");
     }
+}
+
+void MainWindow::action_export_jde_graph(){
+    QString filePath = QFileDialog::getSaveFileName(this, tr("Export arguments"), "", tr("JSON Files (*.json)"));
+    if (filePath.isEmpty())
+        return;
+
+    QFileInfo fileInfo(filePath);
+    if (!exportManager->exportGraphValues(filePath, mainFitnessGraph->getLinesForExport())){
+        prompt_warning_message("Export Error", "Failed to export graph values to" + fileInfo.fileName().toStdString());
+        return;
+    }
+    prompt_info_message("Graph values exported to " + fileInfo.fileName().toStdString());
+
 }
 
 
@@ -306,7 +329,7 @@ void MainWindow::applyGraphSettings(){
     // Set graph preferences acquired from settings manager
     QMap preferenceMap = settingsManager->getGraphSettingsCheckbox();
     QVector<int> yRangeVec = settingsManager->getGraphSettingsYRange();
-    int yLow = -29, yHigh = 1;
+    int yLow = mainFitnessGraph->Y_RANGE_LOW_INIT, yHigh = mainFitnessGraph->Y_RANGE_HIGH_INIT;
     if (!yRangeVec.isEmpty()){
         yLow = yRangeVec[0];
         yHigh = yRangeVec[1];
