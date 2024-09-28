@@ -23,6 +23,7 @@ HEADERS += \
     exportmanager.h \
     fitnessgraph.h \
     jde.h \
+    jdestatsdialog.h \
     jdeworker.h \
     mainwindow.h \
     settingsmanager.h \

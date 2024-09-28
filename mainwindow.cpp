@@ -2,6 +2,7 @@
 #include "ui_mainwindow.h"
 #include "autoexportdialog.h"
 #include "jdeworker.h"
+#include "jdestatsdialog.h"
 
 #include <QThread>
 #include <cctype>
@@ -42,6 +43,7 @@ void MainWindow::setup_ui_elements(){
     connect(ui->actionAutomatic_jDE_export, &QAction::triggered, this, &MainWindow::action_jde_automatic_export);
     connect(ui->actionExport_maingraph_values, &QAction::triggered, this, &MainWindow::action_export_jde_graph);
     connect(ui->actionImport_maingraph_values, &QAction::triggered, this, &MainWindow::action_import_jde_graph);
+    connect(ui->actionjDE_Stats, &QAction::triggered, this, &MainWindow::action_show_jde_stats);
 
 
     // Input data form styling
@@ -248,6 +250,11 @@ void MainWindow::action_import_jde_graph(){
     settingsManager->recordGraphImport();
 }
 
+void MainWindow::action_show_jde_stats() {
+    // Open the statistics dialog
+    JDEStatsDialog statsDialog(this, settingsManager);
+    statsDialog.exec();
+}
 
 /* ---------------------jDE ALGORITHM--------------------- */
 

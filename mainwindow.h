@@ -39,6 +39,7 @@ private slots:
     void action_jde_automatic_export();
     void action_export_jde_graph();
     void action_import_jde_graph();
+    void action_show_jde_stats();
 
 private:
     Ui::MainWindow *ui;

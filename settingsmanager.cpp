@@ -209,8 +209,9 @@ int SettingsManager::getGraphSettingsSaveCount() const {
 int SettingsManager::getAppOpenCount() {
     return settings->value(A_S_APP_OPENED_COUNT, 0).toInt();
 }
+// Returns empty if doesn't exist
 QDateTime SettingsManager::getLastUsage() {
-    return settings->value(A_S_LAST_USAGE, 0).toDateTime();
+    return settings->value(A_S_LAST_USAGE, QDateTime()).toDateTime();
 }
 int SettingsManager::getActionFailedCount() {
     return settings->value(A_S_ACTION_FAILED_COUNT, 0).toInt();
