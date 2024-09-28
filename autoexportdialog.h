@@ -51,7 +51,7 @@ public:
         buttonLayout->addWidget(cancelButton);
         mainLayout->addLayout(buttonLayout);
 
-        resize(320, 160);
+        resize(WINDOW_WIDTH, WINDOW_HEIGHT);
 
         // Connect buttons to slots
         connect(fileButton, &QPushButton::clicked, this, &AutoExportDialog::chooseFile);
@@ -97,6 +97,10 @@ private:
     QCheckBox *checkBoxArgs;
     QCheckBox *checkBoxResults;
     QCheckBox *checkBoxTime;
+
+    // Size constants
+    const int WINDOW_WIDTH = 320;
+    const int WINDOW_HEIGHT = 160;
 };
 
 

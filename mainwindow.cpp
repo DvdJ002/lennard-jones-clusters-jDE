@@ -20,6 +20,8 @@ MainWindow::MainWindow(QWidget *parent)
     this->setFixedSize(this->size());
     this->setWindowFlags(Qt::Window | Qt::MSWindowsFixedSizeDialogHint);
     setup_ui_elements();
+    settingsManager->recordAppOpened();
+    settingsManager->recordLastUsage(QDateTime::currentDateTime());
     applyGraphSettings();
 }
 
@@ -126,6 +128,8 @@ void MainWindow::on_button_savegraphsettings_clicked()
     // Graph preferences acquired from settings manager
     applyGraphSettings();
     prompt_info_message("Graph preferences saved");
+
+    settingsManager->recordGraphSettingsSave();
 }
 
 
@@ -181,6 +185,9 @@ void MainWindow::action_import_jde_arguments(){
         ui->edit_target->setText(QString::number(targetValue.toDouble()));
         optimizeZeroesValue.toBool() ?
             ui->checkBox_opt->setCheckState(Qt::Checked) : ui->checkBox_opt->setCheckState(Qt::Unchecked);
+
+        settingsManager->recordArgumentsImport();
+
 }
 
 void MainWindow::action_export_jde_arguments(){
@@ -200,6 +207,7 @@ void MainWindow::action_export_jde_arguments(){
     }
     prompt_info_message("jDE arguments exported to " + fileInfo.fileName().toStdString());
 
+    settingsManager->recordArgumentsExport();
 }
 
 void MainWindow::action_jde_automatic_export(){
@@ -220,6 +228,8 @@ void MainWindow::action_export_jde_graph(){
         return;
     }
     prompt_info_message("Graph values exported to " + fileInfo.fileName().toStdString());
+
+    settingsManager->recordGraphExport();
 }
 
 void MainWindow::action_import_jde_graph(){
@@ -234,6 +244,8 @@ void MainWindow::action_import_jde_graph(){
         return;
     }
     mainFitnessGraph->importSeries(seriesVec);
+
+    settingsManager->recordGraphImport();
 }
 
 
@@ -242,6 +254,7 @@ void MainWindow::action_import_jde_graph(){
 void MainWindow::start_worker(){
     ui->label_livedata->setText("");
     ui->button_start->setText("Stop");
+    settingsManager->recordAlgorithmRun();
 
     // Reset graph values before new instance starts
     mainFitnessGraph->setTargetEnergy(ui->edit_target->toPlainText().toDouble());
@@ -267,10 +280,11 @@ void MainWindow::update_best_fitness(double bestFitness, double elapsed){
 }
 
 // This function is called when the jde thread is finished
-void MainWindow::display_algo_results(std::string results){
+void MainWindow::display_algo_results(std::string results, double runtime){
     ui->label_end_results->setText("");
     ui->label_end_results->setText(QString::fromStdString(results));
     ui->button_start->setText("Start");
+
     jdeWorker = NULL; jdeWorkerThread = NULL;
 
     // Automatically export the algorithm output if needed
@@ -288,6 +302,10 @@ void MainWindow::display_algo_results(std::string results){
             preferenceMap[settingsManager->A_X_RESULTS_KEY] ? QString::fromStdString(results) : "",
             preferenceMap[settingsManager->A_X_TIMESTAMP_KEY] ? QDateTime::currentDateTime() : QDateTime());
     }
+
+    // save runtime average of each result in settings
+    settingsManager->recordAlgorithmStop();
+    settingsManager->addToCumulativeRuntime(runtime);
 }
 
 bool MainWindow::is_jde_running(){
@@ -326,6 +344,7 @@ bool MainWindow::is_input_valid() {
 
 void MainWindow::prompt_warning_message(std::string warningText, std::string infoText){
     QMessageBox msgBox;
+    settingsManager->recordActionFailed();
     msgBox.setInformativeText(QString::fromStdString(infoText));
     msgBox.setText(QString::fromStdString(warningText));
     msgBox.setIcon(QMessageBox::Warning);

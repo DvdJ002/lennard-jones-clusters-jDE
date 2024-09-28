@@ -20,8 +20,9 @@ public:
     void terminateExecution();
 
 signals:
-    void fitnessUpdated(double fitness, double elapsed);  // Signal to notify UI of the new best fitness
-    void sendAlgorithmResults(std::string results);
+    // Runtime always in seconds
+    void fitnessUpdated(double fitness, double elapsed);
+    void sendAlgorithmResults(std::string results, double runtime);
     void taskFinished();
 
 public slots:

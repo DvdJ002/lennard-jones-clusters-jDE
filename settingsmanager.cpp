@@ -4,6 +4,10 @@ SettingsManager::SettingsManager() : settings(new QSettings("DvdJ002", "LennardJ
     initializeSettings();
 }
 
+SettingsManager::~SettingsManager() {
+    delete settings;
+}
+
 void SettingsManager::initializeSettings(){
     if (!settings->contains(A_X_FILE_KEY)) {
         settings->setValue(A_X_FILE_KEY, "");
@@ -95,6 +99,136 @@ QVector<int> SettingsManager::getGraphSettingsYRange(){
     }
     return splitsVec;
 }
+
+
+/*---------------- jDE Statistics setters ----------------*/
+
+void SettingsManager::recordAlgorithmRun() {
+    int count = settings->value(J_S_ALGORITHM_RUN_COUNT, 0).toInt();
+    settings->setValue(J_S_ALGORITHM_RUN_COUNT, count + 1);
+}
+void SettingsManager::recordAlgorithmStop() {
+    int count = settings->value(J_S_ALGORITHM_STOP_COUNT, 0).toInt();
+    settings->setValue(J_S_ALGORITHM_STOP_COUNT, count + 1);
+}
+void SettingsManager::addToCumulativeRuntime(double runtime) {
+    double cumulativeRuntime = settings->value(J_S_CUMULATIVE_RUNTIME, 0.0).toDouble();
+    settings->setValue(J_S_CUMULATIVE_RUNTIME, cumulativeRuntime + runtime);
+}
+void SettingsManager::recordGraphImport() {
+    int count = settings->value(J_S_GRAPH_IMPORT_COUNT, 0).toInt();
+    settings->setValue(J_S_GRAPH_IMPORT_COUNT, count + 1);
+}
+void SettingsManager::recordGraphExport() {
+    int count = settings->value(J_S_GRAPH_EXPORT_COUNT, 0).toInt();
+    settings->setValue(J_S_GRAPH_EXPORT_COUNT, count + 1);
+}
+void SettingsManager::recordArgumentsImport() {
+    int count = settings->value(J_S_ARGUMENTS_IMPORT_COUNT, 0).toInt();
+    settings->setValue(J_S_ARGUMENTS_IMPORT_COUNT, count + 1);
+}
+void SettingsManager::recordArgumentsExport() {
+    int count = settings->value(J_S_ARGUMENTS_EXPORT_COUNT, 0).toInt();
+    settings->setValue(J_S_ARGUMENTS_EXPORT_COUNT, count + 1);
+}
+void SettingsManager::recordGraphSettingsSave() {
+    int count = settings->value(J_S_GRAPH_SETTINGS_SAVE_COUNT, 0).toInt();
+    settings->setValue(J_S_GRAPH_SETTINGS_SAVE_COUNT, count + 1);
+}
+
+
+/*---------------- App Statistics setters ----------------*/
+
+void SettingsManager::recordAppOpened() {
+    int count = settings->value(A_S_APP_OPENED_COUNT, 0).toInt();
+    settings->setValue(A_S_APP_OPENED_COUNT, count + 1);
+}
+void SettingsManager::recordPage1Opened(){
+    int count = settings->value(A_S_PAGE1_OPENED_COUNT, 0).toInt();
+    settings->setValue(A_S_PAGE1_OPENED_COUNT, count + 1);
+}
+void SettingsManager::recordPage2Opened(){
+    int count = settings->value(A_S_PAGE2_OPENED_COUNT, 0).toInt();
+    settings->setValue(A_S_PAGE2_OPENED_COUNT, count + 1);
+}
+void SettingsManager::recordPage3Opened(){
+    int count = settings->value(A_S_PAGE3_OPENED_COUNT, 0).toInt();
+    settings->setValue(A_S_PAGE3_OPENED_COUNT, count + 1);
+}
+void SettingsManager::recordLastUsage(QDateTime time) {
+    settings->setValue(A_S_LAST_USAGE, time);
+}
+void SettingsManager::recordActionFailed() {
+    int count = settings->value(A_S_ACTION_FAILED_COUNT, 0).toInt();
+    settings->setValue(A_S_ACTION_FAILED_COUNT, count + 1);
+}
+
+
+/*---------------- jDE statistics getters ----------------*/
+
+int SettingsManager::getAlgorithmRunCount() const {
+    return settings->value(J_S_ALGORITHM_RUN_COUNT, 0).toInt();
+}
+
+int SettingsManager::getAlgorithmStopCount() const {
+    return settings->value(J_S_ALGORITHM_STOP_COUNT, 0).toInt();
+}
+
+double SettingsManager::getAverageRuntime() const {
+    int runCount = settings->value(J_S_ALGORITHM_RUN_COUNT, 0).toInt();
+    if (runCount == 0) {
+        return 0.0; // Avoid division by zero
+    }
+    double cumulativeRuntime = settings->value(J_S_CUMULATIVE_RUNTIME, 0.0).toDouble();
+    return cumulativeRuntime / runCount;
+}
+
+int SettingsManager::getGraphImportCount() const {
+    return settings->value(J_S_GRAPH_IMPORT_COUNT, 0).toInt();
+}
+
+int SettingsManager::getGraphExportCount() const {
+    return settings->value(J_S_GRAPH_EXPORT_COUNT, 0).toInt();
+}
+
+int SettingsManager::getArgumentsImportCount() const {
+    return settings->value(J_S_ARGUMENTS_IMPORT_COUNT, 0).toInt();
+}
+
+int SettingsManager::getArgumentsExportCount() const {
+    return settings->value(J_S_ARGUMENTS_EXPORT_COUNT, 0).toInt();
+}
+
+int SettingsManager::getGraphSettingsSaveCount() const {
+    return settings->value(J_S_GRAPH_SETTINGS_SAVE_COUNT, 0).toInt();
+}
+
+
+/*---------------- App statistics getters ----------------*/
+
+int SettingsManager::getAppOpenCount() {
+    return settings->value(A_S_APP_OPENED_COUNT, 0).toInt();
+}
+QDateTime SettingsManager::getLastUsage() {
+    return settings->value(A_S_LAST_USAGE, 0).toDateTime();
+}
+int SettingsManager::getActionFailedCount() {
+    return settings->value(A_S_ACTION_FAILED_COUNT, 0).toInt();
+}
+
+int SettingsManager::getMostFrequentlyUsedPage() {
+    int page1Count = settings->value(A_S_PAGE1_OPENED_COUNT, 0).toInt();
+    int page2Count = settings->value(A_S_PAGE2_OPENED_COUNT, 0).toInt();
+    int page3Count = settings->value(A_S_PAGE3_OPENED_COUNT, 0).toInt();
+
+    if (page1Count >= page2Count && page1Count >= page3Count) {
+        return 1;
+    } else if (page2Count >= page1Count && page2Count >= page3Count) {
+        return 2;
+    }
+    return 3;
+}
+
 
 
 

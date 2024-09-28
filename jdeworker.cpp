@@ -87,7 +87,7 @@ void JDEWorker::startAlgorithm(X& best, std::vector<X>& population, unsigned int
        << "\nE: " << std::fixed << std::setprecision(6) << bestFitness;
     std::string algoResults = ss.str();
 
-    emit sendAlgorithmResults(algoResults);
+    emit sendAlgorithmResults(algoResults, duration);
 
     // Signal so thread can be quit
     emit taskFinished();
