@@ -51,6 +51,8 @@ public:
         buttonLayout->addWidget(cancelButton);
         mainLayout->addLayout(buttonLayout);
 
+        resize(320, 160);
+
         // Connect buttons to slots
         connect(fileButton, &QPushButton::clicked, this, &AutoExportDialog::chooseFile);
         connect(okButton, &QPushButton::clicked, this, &AutoExportDialog::saveSettings);

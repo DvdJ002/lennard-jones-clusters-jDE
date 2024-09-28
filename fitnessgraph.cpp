@@ -69,7 +69,7 @@ void FitnessGraph::updateGraph(double newFitness, double timeElapsed){
     }
 }
 
-// TODO: Different color line (if possible)?
+// Adds a different colored line - chosen by colorPicker
 void FitnessGraph::addLineToChart(){
     QLineSeries *newSeries = new QLineSeries();
     QPen pen(colorPicker->randomColor());
@@ -82,6 +82,18 @@ void FitnessGraph::addLineToChart(){
     seriesList->push_back(newSeries);
 }
 
+void FitnessGraph::importSeries(QVector<QLineSeries*>* seriesVec){
+    // Clear previous series - avoid duplicate line numbers
+    clearAllSeries();
+    for (QLineSeries* series : *seriesVec){
+        QPen pen(colorPicker->randomColor());
+        series->setPen(pen);
+        chart->addSeries(series);
+        series->attachAxis(axisX); series->attachAxis(axisY);
+        seriesList->push_back(series);
+    }
+}
+
 // TODO: Clear all series in vector and reset X range
 void FitnessGraph::resetGraph() {
     clearAllSeries();
@@ -89,7 +101,7 @@ void FitnessGraph::resetGraph() {
     axisX->setRange(0, X_RANGE_INIT);
 }
 
-// ALWAYS CALLED BEFORE NEW ALGORITHM INSTANCE IS LAUNCHED
+// ALWAYS CALL BEFORE NEW ALGORITHM INSTANCE IS LAUNCHED
 void FitnessGraph::newRunInstance(){
     if (clearLineWhenStart){
         clearAllSeries();
@@ -120,6 +132,7 @@ void FitnessGraph::setYRange(int yLow, int YHigh){
     axisY->setRange(Y_RANGE_LOW, Y_RANGE_HIGH);
 }
 
+// Sets user-defined preferences, func called by mainwindow, acquired by settings manager
 void FitnessGraph::setPreferences(
     bool axisTitle, bool displayTarget, int yRangeLow, int yRangeHigh, bool clearLine)
 {

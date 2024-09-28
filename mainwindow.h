@@ -23,7 +23,6 @@ public:
     ~MainWindow();
 
 private slots:
-
     // Button slots
     void on_button_mainscreen_clicked();
     void on_button_screen2_clicked();
@@ -39,8 +38,7 @@ private slots:
     void action_export_jde_arguments();
     void action_jde_automatic_export();
     void action_export_jde_graph();
-
-
+    void action_import_jde_graph();
 
 private:
     Ui::MainWindow *ui;

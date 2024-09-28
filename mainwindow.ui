@@ -398,9 +398,9 @@
       <property name="geometry">
        <rect>
         <x>490</x>
-        <y>420</y>
+        <y>400</y>
         <width>291</width>
-        <height>151</height>
+        <height>161</height>
        </rect>
       </property>
       <layout class="QGridLayout" name="graph_settings_layout" rowstretch="1,1,1,1,1">
@@ -490,10 +490,10 @@
      <widget class="QPushButton" name="button_resetyrange">
       <property name="geometry">
        <rect>
-        <x>789</x>
-        <y>480</y>
+        <x>790</x>
+        <y>463</y>
         <width>81</width>
-        <height>24</height>
+        <height>27</height>
        </rect>
       </property>
       <property name="text">
@@ -608,7 +608,7 @@ Made with QT (C++)</string>
      <rect>
       <x>252</x>
       <y>101</y>
-      <width>155</width>
+      <width>157</width>
       <height>122</height>
      </rect>
     </property>
@@ -617,15 +617,22 @@ Made with QT (C++)</string>
     </property>
     <widget class="QMenu" name="menuExport_arguments">
      <property name="title">
-      <string>Export</string>
+      <string>Export arguments</string>
      </property>
      <addaction name="actionExport_jDE_arguments"/>
      <addaction name="actionAutomatic_jDE_export"/>
     </widget>
+    <widget class="QMenu" name="menuGraph_values">
+     <property name="title">
+      <string>Graph values</string>
+     </property>
+     <addaction name="actionExport_maingraph_values"/>
+     <addaction name="actionImport_maingraph_values"/>
+    </widget>
     <addaction name="separator"/>
     <addaction name="actionImport_jDE_arguments"/>
     <addaction name="menuExport_arguments"/>
-    <addaction name="actionExport_jDE_graph"/>
+    <addaction name="menuGraph_values"/>
    </widget>
    <widget class="QMenu" name="menuApp">
     <property name="title">
@@ -649,11 +656,6 @@ Made with QT (C++)</string>
     <string>Import arguments</string>
    </property>
   </action>
-  <action name="actionExport_jDE_graph">
-   <property name="text">
-    <string>Export graph values</string>
-   </property>
-  </action>
   <action name="actionExit">
    <property name="text">
     <string>Exit</string>
@@ -661,7 +663,7 @@ Made with QT (C++)</string>
   </action>
   <action name="actionExport_jDE_arguments">
    <property name="text">
-    <string>Export arguments</string>
+    <string>Export current</string>
    </property>
   </action>
   <action name="actionExport_jDE_results">
@@ -682,6 +684,16 @@ Made with QT (C++)</string>
   <action name="actionApplication_stats">
    <property name="text">
     <string>Application stats</string>
+   </property>
+  </action>
+  <action name="actionExport_maingraph_values">
+   <property name="text">
+    <string>Export graph values</string>
+   </property>
+  </action>
+  <action name="actionImport_maingraph_values">
+   <property name="text">
+    <string>Import graph values</string>
    </property>
   </action>
  </widget>

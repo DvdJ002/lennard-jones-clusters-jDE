@@ -24,6 +24,8 @@ public:
 
     // Graph export
     QJsonObject getJSONFromSeriesList(QVector<QLineSeries*> *seriesList);
+    QVector<QLineSeries*>* convertJSONToSeriesList(const QJsonObject &importedJSON);
+    QVector<QLineSeries*>* importGraphValues(const QString &filePath);
     bool exportGraphValues(const QString &filePath, QVector<QLineSeries*> *seriesList);
 signals:
 };

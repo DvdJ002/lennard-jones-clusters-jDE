@@ -38,7 +38,8 @@ void MainWindow::setup_ui_elements(){
     connect(ui->actionImport_jDE_arguments, &QAction::triggered, this, &MainWindow::action_import_jde_arguments);
     connect(ui->actionExport_jDE_arguments, &QAction::triggered, this, &MainWindow::action_export_jde_arguments);
     connect(ui->actionAutomatic_jDE_export, &QAction::triggered, this, &MainWindow::action_jde_automatic_export);
-    connect(ui->actionExport_jDE_graph, &QAction::triggered, this, &MainWindow::action_export_jde_graph);
+    connect(ui->actionExport_maingraph_values, &QAction::triggered, this, &MainWindow::action_export_jde_graph);
+    connect(ui->actionImport_maingraph_values, &QAction::triggered, this, &MainWindow::action_import_jde_graph);
 
 
     // Input data form styling
@@ -209,7 +210,7 @@ void MainWindow::action_jde_automatic_export(){
 }
 
 void MainWindow::action_export_jde_graph(){
-    QString filePath = QFileDialog::getSaveFileName(this, tr("Export arguments"), "", tr("JSON Files (*.json)"));
+    QString filePath = QFileDialog::getSaveFileName(this, tr("Export graph values"), "", tr("JSON Files (*.json)"));
     if (filePath.isEmpty())
         return;
 
@@ -219,7 +220,20 @@ void MainWindow::action_export_jde_graph(){
         return;
     }
     prompt_info_message("Graph values exported to " + fileInfo.fileName().toStdString());
+}
 
+void MainWindow::action_import_jde_graph(){
+    QString filePath = QFileDialog::getOpenFileName(this, tr("Import graph values"), "", tr("JSON Files (*.json)"));
+    if (filePath.isEmpty()) {
+        return;
+    }
+
+    QVector<QLineSeries*> *seriesVec = exportManager->importGraphValues(filePath);
+    if (seriesVec->isEmpty()){
+        prompt_warning_message("Import Error", "Failed to open file or invalid JSON format");
+        return;
+    }
+    mainFitnessGraph->importSeries(seriesVec);
 }
 
 

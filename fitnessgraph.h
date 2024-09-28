@@ -16,6 +16,7 @@ public:
     explicit FitnessGraph(QWidget *parent = nullptr);
     void updateGraph(double newFitness, double timeElapsed);
     void addLineToChart();
+    void importSeries(QVector<QLineSeries*>* seriesVec);
     void resetGraph();
     void newRunInstance();
     void clearAllSeries();
