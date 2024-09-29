@@ -625,3 +625,193 @@ runtime (s): 0.681595s
 speed (nfes/s): 987096
 E: -25.754702
 ---------------------------------------
+[2024-09-29 14:22:38]
+{
+    "N": 10,
+    "Np": 100,
+    "nfesLmt": -1,
+    "optimizeZeroes": true,
+    "runtimeLmt": 30,
+    "seed": 5,
+    "target": -27.8225
+}
+
+TARGET REACHED. 
+N: 10
+seed: 5
+nfes: 2622900
+runtime (s): 2.57547s
+speed (nfes/s): 1.01842e+06
+E: -27.838141
+---------------------------------------
+[2024-09-29 14:23:03]
+{
+    "N": 10,
+    "Np": 100,
+    "nfesLmt": -1,
+    "optimizeZeroes": true,
+    "runtimeLmt": 30,
+    "seed": 5,
+    "target": -27.8225
+}
+
+TARGET REACHED. 
+N: 10
+seed: 5
+nfes: 2622900
+runtime (s): 2.53705s
+speed (nfes/s): 1.03384e+06
+E: -27.838141
+---------------------------------------
+[2024-09-29 14:23:19]
+{
+    "N": 11,
+    "Np": 100,
+    "nfesLmt": -1,
+    "optimizeZeroes": true,
+    "runtimeLmt": 30,
+    "seed": 5,
+    "target": -27.8225
+}
+
+TARGET REACHED. 
+N: 11
+seed: 5
+nfes: 444300
+runtime (s): 0.474729s
+speed (nfes/s): 935902
+E: -28.260707
+---------------------------------------
+[2024-09-29 14:23:32]
+{
+    "N": 8,
+    "Np": 100,
+    "nfesLmt": -1,
+    "optimizeZeroes": true,
+    "runtimeLmt": 30,
+    "seed": 5,
+    "target": -27.8225
+}
+
+TARGET NOT REACHED. 
+N: 8
+seed: 5
+nfes: 8754600
+runtime (s): 7.26666s
+speed (nfes/s): 1.20476e+06
+E: -19.821489
+---------------------------------------
+[2024-09-29 14:24:02]
+{
+    "N": 8,
+    "Np": 100,
+    "nfesLmt": -1,
+    "optimizeZeroes": true,
+    "runtimeLmt": 30,
+    "seed": 5,
+    "target": -27.8225
+}
+
+TARGET NOT REACHED. 
+N: 8
+seed: 5
+nfes: 2556100
+runtime (s): 2.09442s
+speed (nfes/s): 1.22043e+06
+E: -19.795979
+---------------------------------------
+[2024-09-29 14:24:07]
+{
+    "N": 10,
+    "Np": 100,
+    "nfesLmt": -1,
+    "optimizeZeroes": true,
+    "runtimeLmt": 30,
+    "seed": 5,
+    "target": -27.8225
+}
+
+TARGET NOT REACHED. 
+N: 10
+seed: 5
+nfes: 884800
+runtime (s): 0.872706s
+speed (nfes/s): 1.01386e+06
+E: -26.200214
+---------------------------------------
+[2024-09-29 14:25:36]
+{
+    "N": 10,
+    "Np": 100,
+    "nfesLmt": -1,
+    "optimizeZeroes": true,
+    "runtimeLmt": 30,
+    "seed": 5,
+    "target": -27.8225
+}
+
+TARGET REACHED. 
+N: 10
+seed: 5
+nfes: 2622900
+runtime (s): 2.61294s
+speed (nfes/s): 1.00381e+06
+E: -27.838141
+---------------------------------------
+[2024-09-29 14:26:00]
+{
+    "N": 10,
+    "Np": 100,
+    "nfesLmt": -1,
+    "optimizeZeroes": true,
+    "runtimeLmt": 35,
+    "seed": 1,
+    "target": -28.4225
+}
+
+TARGET REACHED. 
+N: 10
+seed: 1
+nfes: 16296900
+runtime (s): 15.5243s
+speed (nfes/s): 1.04977e+06
+E: -28.422503
+---------------------------------------
+[2024-09-29 14:27:07]
+{
+    "N": 10,
+    "Np": 100,
+    "nfesLmt": -1,
+    "optimizeZeroes": true,
+    "runtimeLmt": 3,
+    "seed": 1,
+    "target": -28.4225
+}
+
+TARGET NOT REACHED. 
+N: 10
+seed: 1
+nfes: 3182300
+runtime (s): 3.00002s
+speed (nfes/s): 1.06076e+06
+E: -28.127407
+---------------------------------------
+[2024-09-29 14:27:21]
+{
+    "N": 10,
+    "Np": 100,
+    "nfesLmt": -1,
+    "optimizeZeroes": true,
+    "runtimeLmt": 3,
+    "seed": 1,
+    "target": -28.4225
+}
+
+TARGET NOT REACHED. 
+N: 10
+seed: 1
+nfes: 1666800
+runtime (s): 1.63251s
+speed (nfes/s): 1.02101e+06
+E: -27.697319
+---------------------------------------
