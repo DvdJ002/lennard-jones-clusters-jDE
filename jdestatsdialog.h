@@ -180,11 +180,51 @@ public:
         settingsLayout->addWidget(horizontalLineSettings);
         mainLayout->addLayout(settingsLayout);
 
+        // Button for resetting the settings
+        QHBoxLayout *buttonLayout = new QHBoxLayout();
+        resetButton = new QPushButton(tr("Reset settings"), this);
+        resetButton->setMinimumWidth(120);
+        resetButton->setFocusPolicy(Qt::NoFocus);
+        buttonLayout->addSpacerItem(
+            new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum)
+        );
+
+        connect(resetButton, &QPushButton::clicked, this, &JDEStatsDialog::resetSettings);
+
+        buttonLayout->addWidget(resetButton, 0, Qt::AlignRight);
+        mainLayout->addLayout(buttonLayout);
+
         setMinimumWidth(375);
+
         resize(WINDOW_WIDTH, WINDOW_HEIGHT);
         setLayout(mainLayout);
     }
 
+    void resetAllLabels(){
+        algorithmRunLabel->setText(QString::number(0));
+        algorithmStopLabel->setText(QString::number(0));
+        averageRuntimeLabel->setText(QString::number(0.0));
+        graphImportExportLabel->setText(QString::number(0) + "/" + QString::number(0));
+        argumentsImportExportLabel->setText(QString::number(0) + "/" + QString::number(0));
+        algorithmRunLabel->setText(QString::number(0));
+        graphSettingsSaveLabel->setText(QString::number(0));
+    }
+
+private slots:
+    void resetSettings(){
+        QMessageBox::StandardButton resetConfirmation;
+        resetConfirmation = QMessageBox::question(
+            nullptr, "Confirm Action", "Are you sure you want to reset jDE settings?",
+            QMessageBox::Yes | QMessageBox::Cancel
+        );
+
+        // Check the user's response
+        if (resetConfirmation == QMessageBox::Yes) {
+            settingsManager->resetAlgorithmSettings();
+            resetAllLabels();
+            QMessageBox::information(nullptr, "Confirmed", "jDE settings were reset");
+        }
+    }
 
 private:
     SettingsManager *settingsManager;
@@ -195,6 +235,7 @@ private:
     QLabel *graphImportExportLabel;
     QLabel *argumentsImportExportLabel;
     QLabel *graphSettingsSaveLabel;
+    QPushButton *resetButton;
 
     // Size constants
     const int WINDOW_WIDTH = 410;

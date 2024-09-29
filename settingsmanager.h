@@ -49,6 +49,9 @@ public:
     int getArgumentsExportCount() const;
     int getGraphSettingsSaveCount() const;
 
+    // Warning: will reset all algorithm settings
+    void resetAlgorithmSettings();
+
     // App statistics specific functions
     void recordAppOpened();
     void recordPage1Opened();

@@ -124,13 +124,14 @@ public:
 
         actionedFailedLayout->addLayout(actionedFailedInnerLayout);
         actionedFailedLayout->addWidget(horizontalLineGraph);
+
         mainLayout->addLayout(actionedFailedLayout);
+
 
         setMinimumWidth(375);
         resize(WINDOW_WIDTH, WINDOW_HEIGHT);
         setLayout(mainLayout);
     }
-
 
 private:
     SettingsManager *settingsManager;

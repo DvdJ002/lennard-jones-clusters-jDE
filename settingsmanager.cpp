@@ -135,6 +135,17 @@ void SettingsManager::recordGraphSettingsSave() {
     int count = settings->value(J_S_GRAPH_SETTINGS_SAVE_COUNT, 0).toInt();
     settings->setValue(J_S_GRAPH_SETTINGS_SAVE_COUNT, count + 1);
 }
+void SettingsManager::resetAlgorithmSettings() {
+    settings->setValue(J_S_ALGORITHM_RUN_COUNT, 0);
+    settings->setValue(J_S_ALGORITHM_STOP_COUNT, 0);
+    settings->setValue(J_S_CUMULATIVE_RUNTIME, 0);
+    settings->setValue(J_S_GRAPH_IMPORT_COUNT, 0);
+    settings->setValue(J_S_GRAPH_EXPORT_COUNT, 0);
+    settings->setValue(J_S_ARGUMENTS_IMPORT_COUNT, 0);
+    settings->setValue(J_S_ARGUMENTS_EXPORT_COUNT, 0);
+    settings->setValue(J_S_GRAPH_SETTINGS_SAVE_COUNT, 0);
+}
+
 
 
 /*---------------- App Statistics setters ----------------*/
