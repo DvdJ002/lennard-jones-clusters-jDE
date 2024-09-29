@@ -19,6 +19,7 @@ SOURCES += \
 
 HEADERS += \
     ColorPicker.h \
+    appstatsdialog.h \
     autoexportdialog.h \
     exportmanager.h \
     fitnessgraph.h \

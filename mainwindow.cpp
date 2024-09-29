@@ -3,6 +3,7 @@
 #include "autoexportdialog.h"
 #include "jdeworker.h"
 #include "jdestatsdialog.h"
+#include "appstatsdialog.h"
 
 #include <QThread>
 #include <cctype>
@@ -22,7 +23,6 @@ MainWindow::MainWindow(QWidget *parent)
     this->setWindowFlags(Qt::Window | Qt::MSWindowsFixedSizeDialogHint);
     setup_ui_elements();
     settingsManager->recordAppOpened();
-    settingsManager->recordLastUsage(QDateTime::currentDateTime());
     applyGraphSettings();
 }
 
@@ -44,6 +44,7 @@ void MainWindow::setup_ui_elements(){
     connect(ui->actionExport_maingraph_values, &QAction::triggered, this, &MainWindow::action_export_jde_graph);
     connect(ui->actionImport_maingraph_values, &QAction::triggered, this, &MainWindow::action_import_jde_graph);
     connect(ui->actionjDE_Stats, &QAction::triggered, this, &MainWindow::action_show_jde_stats);
+    connect(ui->actionApplication_stats, &QAction::triggered, this, &MainWindow::action_show_app_stats);
 
 
     // Input data form styling
@@ -73,9 +74,18 @@ void MainWindow::setup_ui_elements(){
 /* ---------------------BUTTON SLOTS--------------------- */
 
 // Slots for switching between screens
-void MainWindow::on_button_mainscreen_clicked() { stackedWidget->setCurrentIndex(0); }
-void MainWindow::on_button_screen2_clicked() { stackedWidget->setCurrentIndex(1); }
-void MainWindow::on_button_info_clicked() { stackedWidget->setCurrentIndex(2); }
+void MainWindow::on_button_mainscreen_clicked() {
+    stackedWidget->setCurrentIndex(0);
+    settingsManager->recordPage1Opened();
+}
+void MainWindow::on_button_screen2_clicked() {
+    stackedWidget->setCurrentIndex(1);
+    settingsManager->recordPage2Opened();
+}
+void MainWindow::on_button_info_clicked() {
+    stackedWidget->setCurrentIndex(2);
+    settingsManager->recordPage3Opened();
+}
 
 void MainWindow::on_button_resetgraph_clicked() {
     if (is_jde_running()) {
@@ -89,6 +99,7 @@ void MainWindow::on_button_start_clicked() {
     // DO NOT START ANOTHER THREAD IF PREV INSTANCE IS RUNNING
     if (is_jde_running()) {
         jdeWorker->terminateExecution();
+        settingsManager->recordAlgorithmStop();
         return;
     }
 
@@ -256,6 +267,12 @@ void MainWindow::action_show_jde_stats() {
     statsDialog.exec();
 }
 
+void MainWindow::action_show_app_stats() {
+    AppStatsDialog statsDialog(this, settingsManager);
+    statsDialog.exec();
+}
+
+
 /* ---------------------jDE ALGORITHM--------------------- */
 
 void MainWindow::start_worker(){
@@ -311,7 +328,6 @@ void MainWindow::display_algo_results(std::string results, double runtime){
     }
 
     // save runtime average of each result in settings
-    settingsManager->recordAlgorithmStop();
     settingsManager->addToCumulativeRuntime(runtime);
 }
 
@@ -383,6 +399,8 @@ void MainWindow::applyGraphSettings(){
 
 MainWindow::~MainWindow()
 {
+    settingsManager->recordLastUsage(QDateTime::currentDateTime());
+
     delete ui;
     delete stackedWidget;
     delete jdeWorker;
