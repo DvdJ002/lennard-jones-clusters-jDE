@@ -500,6 +500,19 @@
        <string>Reset range</string>
       </property>
      </widget>
+     <widget class="QPushButton" name="button_zoomgraph">
+      <property name="geometry">
+       <rect>
+        <x>1100</x>
+        <y>40</y>
+        <width>41</width>
+        <height>41</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+     </widget>
     </widget>
     <widget class="QWidget" name="page_2">
      <widget class="QLabel" name="label_2">

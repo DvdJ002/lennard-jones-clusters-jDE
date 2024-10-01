@@ -23,6 +23,7 @@ public:
     void setPreferences(bool darkMode, bool displayTarget, int yRangeBottom, int yRangeTop, bool clearLine);
     void setTargetEnergy(double target);
     void setYRange(int yLow, int yHigh);
+    void toggleZoom();
     QVector<QLineSeries*>* getLinesForExport();
     ~FitnessGraph();
 
@@ -37,7 +38,7 @@ private:
     QVector<QLineSeries*> *seriesList;
     ColorPicker* colorPicker;
     double targetValue = 0.0;
-    bool displayTargetValue, clearLineWhenStart;
+    bool displayTargetValue, clearLineWhenStart, zoomedIn;
 
     // Range values
     int Y_RANGE_LOW = -29.0;

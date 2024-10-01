@@ -1,7 +1,7 @@
 #include "fitnessgraph.h"
 
 FitnessGraph::FitnessGraph(QWidget *parent) : QWidget(parent),
-    chart(new QChart), targetLine(new QLineSeries), axisX(new QValueAxis),
+    chart(new QChart), targetLine(new QLineSeries), axisX(new QValueAxis), zoomedIn(false),
     axisY(new QValueAxis), seriesList(new QVector<QLineSeries*>()), colorPicker(new ColorPicker(6))
 {
     // Create a chart view
@@ -30,7 +30,7 @@ FitnessGraph::FitnessGraph(QWidget *parent) : QWidget(parent),
     targetLine->attachAxis(axisX);
     targetLine->attachAxis(axisY);
     QPen pen(Qt::red);
-    pen.setWidthF(0.015);
+    pen.setWidthF(0.03);
     targetLine->setPen(pen);
 
     QFont titleFont;
@@ -58,15 +58,18 @@ FitnessGraph::FitnessGraph(QWidget *parent) : QWidget(parent),
 void FitnessGraph::updateGraph(double newFitness, double timeElapsed){
     // Append energy point to the last element in the vector
     seriesList->at(seriesList->size()-1)->append(timeElapsed, newFitness);
-    if (displayTargetValue) {
-        targetLine->append(axisX->min(), targetValue);
-        targetLine->append(axisX->max(), targetValue);
-    }
 
     // Extend X axis if out of range
     if (timeElapsed > axisX->max()) {
         axisX->setRange(timeElapsed - X_RANGE_INIT, timeElapsed);
     }
+
+    // Draw target line if necessary
+    if (displayTargetValue) {
+        targetLine->append(axisX->min(), targetValue);
+        targetLine->append(axisX->max(), targetValue);
+    }
+
 }
 
 // Adds a different colored line - chosen by colorPicker
@@ -99,6 +102,7 @@ void FitnessGraph::resetGraph() {
     clearAllSeries();
     targetLine->clear();
     axisX->setRange(0, X_RANGE_INIT);
+    setYRange(Y_RANGE_LOW_INIT, Y_RANGE_HIGH_INIT);
 }
 
 // ALWAYS CALL BEFORE NEW ALGORITHM INSTANCE IS LAUNCHED
@@ -131,6 +135,14 @@ void FitnessGraph::setYRange(int yLow, int YHigh){
     Y_RANGE_HIGH = YHigh;
     axisY->setRange(Y_RANGE_LOW, Y_RANGE_HIGH);
 }
+
+// Toggles Y range between [target-1, target+1] and default
+void FitnessGraph::toggleZoom(){
+    zoomedIn = !zoomedIn;
+    zoomedIn ? axisY->setRange(targetValue - 0.35, targetValue + 0.75)
+         : this->setYRange(Y_RANGE_LOW, Y_RANGE_HIGH);
+}
+
 
 // Sets user-defined preferences, func called by mainwindow, acquired by settings manager
 void FitnessGraph::setPreferences(

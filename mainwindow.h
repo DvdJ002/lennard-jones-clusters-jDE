@@ -42,6 +42,8 @@ private slots:
     void action_show_jde_stats();
     void action_show_app_stats();
 
+    void on_button_zoomgraph_clicked();
+
 private:
     Ui::MainWindow *ui;
     QStackedWidget *stackedWidget;

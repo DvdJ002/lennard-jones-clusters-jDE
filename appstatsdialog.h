@@ -21,7 +21,7 @@ public:
     AppStatsDialog(QWidget *parent, SettingsManager *settManager)
         : QDialog(parent), settingsManager(settManager)
     {
-        setWindowTitle("Algorithm Statistics");
+        setWindowTitle("Application Statistics");
         setUpLayout();
     }
 

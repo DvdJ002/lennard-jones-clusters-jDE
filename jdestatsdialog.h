@@ -214,7 +214,7 @@ private slots:
     void resetSettings(){
         QMessageBox::StandardButton resetConfirmation;
         resetConfirmation = QMessageBox::question(
-            nullptr, "Confirm Action", "Are you sure you want to reset jDE settings?",
+            nullptr, "Confirm Action", "This will permanently reset jDE settings.",
             QMessageBox::Yes | QMessageBox::Cancel
         );
 

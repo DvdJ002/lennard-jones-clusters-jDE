@@ -61,6 +61,9 @@ void MainWindow::setup_ui_elements(){
 
     ui->graphLayout->addWidget(mainFitnessGraph);
 
+    QIcon zoomIcon = QIcon::fromTheme(QIcon::ThemeIcon::EditFind);
+    ui->button_zoomgraph->setIcon(zoomIcon);
+
     // Fill elements with graph settings
     QVector<int> rangeVec = settingsManager->getGraphSettingsYRange();
     QMap preferenceMap = settingsManager->getGraphSettingsCheckbox();
@@ -156,6 +159,12 @@ void MainWindow::on_button_resetyrange_clicked()
     settingsManager->setGraphSettingsYRange(formattedString);
     ui->edit_yrange->setText(formattedString);
 }
+
+void MainWindow::on_button_zoomgraph_clicked()
+{
+    mainFitnessGraph->toggleZoom();
+}
+
 
 
 /* ---------------------MENU ACTION SLOTS--------------------- */
@@ -409,5 +418,4 @@ MainWindow::~MainWindow()
     delete exportManager;
     delete settingsManager;
 }
-
 

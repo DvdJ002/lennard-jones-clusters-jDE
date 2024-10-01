@@ -65,7 +65,7 @@ void JDEWorker::startAlgorithm(X& best, std::vector<X>& population, unsigned int
         auto elapsed = std::chrono::duration_cast<std::chrono::seconds>(end - start).count();
         // Runtime limit reached or exceeded
         if (runtimeLmt != -1 && elapsed >= runtimeLmt) {
-            std::cout << "Time limit exceeded.\n";
+            //std::cout << "Time limit exceeded.\n";
             break;
         }
     }
