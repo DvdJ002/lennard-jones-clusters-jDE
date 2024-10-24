@@ -35,6 +35,7 @@ The application provides real-time visualization and monitoring of the optimizat
 - **Statistics**:
   - The app collects algorithm-specific and application statistics.
   - Statistics such as average run time can be viewed for analytic purposes.
+
   ![sdsdds](https://github.com/user-attachments/assets/b954dbd3-240c-4af9-a400-860b549df2a5)
   ![dsdssd](https://github.com/user-attachments/assets/5a7263ec-cd9f-4809-8ea5-4657f390ce10)
 
